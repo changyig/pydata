@@ -13,10 +13,10 @@ def make_file(filename):
         with open(filename, mode='w', encoding='utf-8') as ff:
             print("文件创建成功！")
 def read_excel():
-    keyword_sheet='hxjq_keyword'
-    country_sheet='country'
+    filename='../data/description_product.txt'
+    keyword_sheet='描述性词语'
+    country_sheet='product'
     data=[]
-    filename='../data/hxjq_keyword_country.txt'
     wb = xlrd.open_workbook(filename=file)#打开文件
     print(wb.sheet_names())#获取所有表格名字
 
@@ -24,23 +24,27 @@ def read_excel():
     sheet1 = wb.sheet_by_name(keyword_sheet)#通过名字获取表格
     sheet2 = wb.sheet_by_name(country_sheet)#通过名字获取表格
     for i1 in range(sheet1.nrows):
+
         str1=sheet1.cell_value(i1,0)
-        for i2 in range(sheet2.nrows):
-            str2 = sheet2.cell_value(i2, 0)
-            str=str1+' '+str2
-            write_txt(str,filename)
-            # print(str)
-            try:
-                sheet3 = wb.sheet_by_name(str2)  # 通过名字获取表格
-                for i3 in range(sheet3.nrows):
-                    str3 = sheet3.cell_value(i3, 0)
-                    # print('存在')
-                    str=str1+' '+str2+' '+str3
-                    write_txt(str,filename)
-            except Exception:
-                # print('没有找到该表单')
+        if str1 != '':
+            # print('不为空')
+            # print(str1)
+            for i2 in range(sheet2.nrows):
+                str2 = sheet2.cell_value(i2, 0)
+                str=str1+' '+str2
+                write_txt(str,filename)
                 # print(str)
-                pass
+                try:
+                    sheet3 = wb.sheet_by_name(str2)  # 通过名字获取表格
+                    for i3 in range(sheet3.nrows):
+                        str3 = sheet3.cell_value(i3, 0)
+                        # print('存在')
+                        str=str1+' '+str2+' '+str3
+                        write_txt(str,filename)
+                except Exception:
+                    # print('没有找到该表单')
+                    # print(str)
+                    pass
 
 def write_txt(keyword,filename):
     make_file(filename)
