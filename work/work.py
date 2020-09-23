@@ -2,7 +2,7 @@ import os
 import time
 import re
 # from datetime import date,datetime
-print(time.strftime("%Y-%m-%d", time.localtime()))
+# print(time.strftime("%Y-%m-%d", time.localtime()))
 def make_file(path=r'E:\红星办公文件\关键词\抓取工具\生成的数据'):
     # path=r'E:\红星办公文件\关键词\抓取工具\生成的数据'
     print(path)
@@ -25,7 +25,14 @@ def improve():
             flag=pattern.search(filename)
             print(flag)
         # print(files)
-
-
     pass
-improve()
+def read_txt_make():
+    make_num=20
+    data=[]
+    dir=r'E:\红星办公文件\关键词\抓取工具\组装词\参与组装txt'
+    for root, dirs, files in os.walk(dir):
+        for filename in files:
+            print(filename)
+            filename_all= len(open(dir+'\\'+filename, mode='r',encoding='utf-8').readlines())
+            print(filename_all)
+read_txt_make()
