@@ -4,6 +4,7 @@ import os
 from datetime import date,datetime
 
 file = 'E:\红星办公文件\关键词\excel关键词整理\谷歌插件关键词.xls'
+#判断文件是否存在 不存在便创建它
 def make_file(filename):
     if os.path.exists(filename):
         pass
@@ -12,6 +13,7 @@ def make_file(filename):
     else:
         with open(filename, mode='w', encoding='utf-8') as ff:
             print("文件创建成功！")
+#读取excel文件 并且根据sheet表单名字 将每第一列内容进行拼接（拼接对象是与内容一样的表单） 并且写入指定的txt文件中
 def read_excel():
     filename='../data/description_product.txt'
     keyword_sheet='描述性词语'
@@ -19,7 +21,6 @@ def read_excel():
     data=[]
     wb = xlrd.open_workbook(filename=file)#打开文件
     print(wb.sheet_names())#获取所有表格名字
-
     # sheet1 = wb.sheet_by_index(0)#通过索引获取表格
     sheet1 = wb.sheet_by_name(keyword_sheet)#通过名字获取表格
     sheet2 = wb.sheet_by_name(country_sheet)#通过名字获取表格
@@ -45,7 +46,7 @@ def read_excel():
                     # print('没有找到该表单')
                     # print(str)
                     pass
-
+#向指定文件中追加内容
 def write_txt(keyword,filename):
     make_file(filename)
     with open(filename, "a", encoding='utf-8') as f:
@@ -59,9 +60,9 @@ def write_txt(keyword,filename):
 #     print(data)
 
 # read_excel()
-
+#去除txt文档中 每行左边的空格 以及空行
 def filter_keyword():
-    filename=r'C:\Users\CYG\Desktop\临时 - 副本 - 副本.txt'
+    filename=r'C:\Users\CYG\Desktop\临时 - 副本.txt'
     file2 = open(r'C:\Users\CYG\Desktop\linshi.txt', 'a', encoding='utf-8')
     with open(filename, mode='r', encoding='utf-8') as ff:
         for i in ff.readlines():
@@ -74,4 +75,4 @@ def filter_keyword():
             print(str)
             file2.write(str)
         # print(ff.readlines())
-read_excel()
+filter_keyword()
