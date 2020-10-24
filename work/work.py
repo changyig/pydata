@@ -15,12 +15,14 @@ class handleTxt:
     '''
     def __init__(self):
         self.read_filename=''
-        self.write_filename='result7.txt'
+        self.write_filename='result13.txt'
         self.readdir=r'D:\pydata\data\组装txt'
         self.writedir=r'D:\pydata\data\组装结果txt'
         self.make_num=30000
         self.open_filename=False
+    '''
     #判断文件是否存在 不存在就创建文件
+    '''
     def make_file(self,path=r'E:\红星办公文件\关键词\抓取工具\生成的数据'):
         # path=r'E:\红星办公文件\关键词\抓取工具\生成的数据'
         if os.path.exists(path):
@@ -32,7 +34,9 @@ class handleTxt:
             else:
                 self.open_filename=open(path, mode='w', encoding='utf-8')
                 print('第二种刚开启文件:{}'.format(path))
-    #测试方法
+    '''
+    测试方法
+    '''
     def improve(self):
         str='error-test.txt'
         # pattern = re.compile(r'(.*)(?!test(.*))(\.)txt')
@@ -42,7 +46,9 @@ class handleTxt:
         flag = pattern.match(str)
         print(flag)
 
+    '''
     # 测试方法
+    '''
     def test(self):
         # pattern=r'(.*)([^test]).txt'
         # pattern=r'(.*)(^-)(.*).txt'
@@ -58,13 +64,17 @@ class handleTxt:
                 print(flag)
             # print(files)
         pass
-    #向打开的文件中写入数据
+    '''
+    向打开的文件中写入数据
+    '''
     def write_txt(self,keyword,filename):
         if self.open_filename :
             self.open_filename.write(keyword)
         else:
             self.make_file(filename)
-    #遍历根据指定文件夹中的文件 并且根据每个文件中的行数按照比例随机抽取行数 并合成新的txt文件
+    '''
+    遍历根据指定文件夹中的文件 并且根据每个文件中的行数按照比例随机抽取行数 并合成新的txt文件
+    '''
     def read_txt_make(self):
         make_num=self.make_num
         data=[]
@@ -79,12 +89,15 @@ class handleTxt:
         for root, dirs, files in os.walk(self.readdir):
             for filename in files:
                 with open(self.readdir + '\\' + filename, mode='r', encoding='utf-8') as ff:
+                    print('文件:{},取出{}数量的的关键词'.format(filename,prop_num[i]))
                     get_rows=random.sample(ff.readlines(),prop_num[i])
                     i = i + 1
                     for keyword in get_rows :
                         self.write_txt(keyword, self.writedir+'/'+self.write_filename)
                     # print(get_rows)
-    #打乱txt文件中的顺序
+    '''
+    打乱txt文件中的顺序
+    '''
     def txt_shuffle(self):
         out = open(r"E:\红星办公文件\关键词\抓取工具\spider1.7\temp.txt", 'w',encoding='utf-8')
         lines = []
@@ -99,7 +112,9 @@ class handleTxt:
         for line in lines:
             out.write(line)
 
-    # 去除txt文档中 每行左边的空格 以及空行
+    '''
+    去除txt文档中 每行左边的空格 以及空行
+    '''
     def filter_keyword(self):
         filename = r'C:\Users\CYG\Desktop\linshi.txt'
         file2 = open(r'C:\Users\CYG\Desktop\linshi2.txt', 'a', encoding='utf-8')
@@ -111,12 +126,18 @@ class handleTxt:
                     print(str)
                     str = str.strip('\n')
                 file2.write(str)
+    '''
+    将字符串中的数字替换掉
+    '''
     def filter_digital_txt(self):
         file2 = open(r'C:\Users\CYG\Desktop\linshi.txt', 'a', encoding='utf-8')
-        with open(r"D:\github\spider\test\keyword.txt", 'r',encoding='utf-8') as infile:
+        with open(r"D:\pydata\data\组装结果txt\result11.txt", 'r',encoding='utf-8') as infile:
             for line in infile:
                 write_line=re.sub('\d+','',line)
                 file2.write(write_line)
+    '''
+    过滤文本中连续的空格
+    '''
     def filter_space_txt(self):
         filename = r'C:\Users\CYG\Desktop\linshi.txt'
         file2 = open(r'C:\Users\CYG\Desktop\linshi2.txt', 'a', encoding='utf-8')
@@ -125,9 +146,24 @@ class handleTxt:
                 str = i.lstrip()
                 str=' '.join(str.split())
                 file2.write(str+'\n')
+    '''
+    将txt里的内容分成等数量的多个txt文本
+    '''
+    def split_num_txt(self):
+        pass
+
+    '''
+        将txt里的内容删除多行
+    '''
+    def del_txt(self):
+        filename=r'D:\pydata\data\test.txt'
+        with open(filename, mode='r', encoding='utf-8') as ff:
+            get_rows = random.sample(ff.readlines(), 5)
+        pass
 if __name__=='__main__':
     hd=handleTxt()
-    hd.filter_space_txt()
+    hd.read_txt_make()
+    hd.filter_digital_txt()
     print(33)
     # str=' a s  svadaf12 ad    adsfa '
     # str = str.lstrip()
