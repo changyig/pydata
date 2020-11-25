@@ -15,10 +15,10 @@ class handleTxt:
     '''
     def __init__(self):
         self.read_filename=''
-        self.write_filename='result13.txt'
+        self.write_filename='result26.txt'
         self.readdir=r'D:\pydata\data\组装txt'
         self.writedir=r'D:\pydata\data\组装结果txt'
-        self.make_num=30000
+        self.make_num=60000
         self.open_filename=False
     '''
     #判断文件是否存在 不存在就创建文件
@@ -82,7 +82,10 @@ class handleTxt:
         for root, dirs, files in os.walk(self.readdir):
             for filename in files:
                 with open(self.readdir+'\\'+filename, mode='r',encoding='utf-8') as f:
-                    file_rows.append(len(f.readlines()))
+                    if filename=='description_product5.txt':
+                        file_rows.append(8000)
+                    else:
+                        file_rows.append(len(f.readlines()))
         all = sum(file_rows)
         prop_num=[ math.ceil(i*make_num/all) for i in file_rows]
         i=0
@@ -99,9 +102,9 @@ class handleTxt:
     打乱txt文件中的顺序
     '''
     def txt_shuffle(self):
-        out = open(r"E:\红星办公文件\关键词\抓取工具\spider1.7\temp.txt", 'w',encoding='utf-8')
+        out = open(r"E:\红星办公文件\关键词\关键词txt备份\临时\temp.txt", 'w',encoding='utf-8')
         lines = []
-        with open(r"E:\红星办公文件\关键词\抓取工具\spider1.7\result7.txt", 'r',encoding='utf-8') as infile:
+        with open(r"E:\红星办公文件\关键词\关键词txt备份\组装词\description_product7.txt", 'r',encoding='utf-8') as infile:
             for line in infile:
                 lines.append(line)
         random.shuffle(lines)
@@ -127,25 +130,45 @@ class handleTxt:
                     str = str.strip('\n')
                 file2.write(str)
     '''
-    将字符串中的数字替换掉
+    将字符串中的数字替换掉  将txt里的除了a 以外的单个字符删除掉
     '''
     def filter_digital_txt(self):
-        file2 = open(r'C:\Users\CYG\Desktop\linshi.txt', 'a', encoding='utf-8')
-        with open(r"D:\pydata\data\组装结果txt\result11.txt", 'r',encoding='utf-8') as infile:
+        write_filename = open(r'C:\Users\CYG\Desktop\linshi.txt', 'a', encoding='utf-8')
+        readfile=self.writedir+'\\'+self.write_filename
+        with open(readfile, 'r',encoding='utf-8') as infile:
             for line in infile:
                 write_line=re.sub('\d+','',line)
-                file2.write(write_line)
+                # write_line=line
+                write_line = [i for i in write_line.split() if len(i) > 1 or i == 'a']
+                write_line = ' '.join(write_line)
+                write_filename.write(write_line+'\n')
     '''
     过滤文本中连续的空格
     '''
     def filter_space_txt(self):
-        filename = r'C:\Users\CYG\Desktop\linshi.txt'
-        file2 = open(r'C:\Users\CYG\Desktop\linshi2.txt', 'a', encoding='utf-8')
-        with open(filename, mode='r', encoding='utf-8') as ff:
+        open_filename = r'C:\Users\CYG\Desktop\linshi.txt'
+        write_filename = open(r'C:\Users\CYG\Desktop\linshi2.txt', 'a', encoding='utf-8')
+        with open(open_filename, mode='r', encoding='utf-8') as ff:
             for i in ff.readlines():
                 str = i.lstrip()
                 str=' '.join(str.split())
-                file2.write(str+'\n')
+                if len(str.split())>1:
+                    flag=self.filter_keyword(str)
+                    if flag is True:
+                        write_filename.write(str+'\n')
+
+    '''
+        判断长尾关键词是否含有关键词
+    '''
+    def filter_keyword(self,words):
+        arr=['crusher','crushing','crushers','dryer','drying','dryers','jaw','grinding','sand','sanding','machine','plant','mill','mills']
+        word_list=words.split()
+        for word in word_list:
+            if word.lower() in arr:
+                return True
+            else:
+                pass
+        return False
     '''
     将txt里的内容分成等数量的多个txt文本
     '''
@@ -162,9 +185,12 @@ class handleTxt:
         pass
 if __name__=='__main__':
     hd=handleTxt()
+    # 根据txt文件生成一定数量关键词的txt文件
     hd.read_txt_make()
     hd.filter_digital_txt()
-    print(33)
+    hd.filter_space_txt()
+    # hd.txt_shuffle()
+    print('运行结束')
     # str=' a s  svadaf12 ad    adsfa '
     # str = str.lstrip()
     # str = ' '.join(str.split())

@@ -21,9 +21,9 @@ def write_txt(keyword,filename):
     pass
 #读取excel文件 并且根据sheet表单名字 将每第一列内容进行拼接（拼接对象是与内容一样的表单） 并且写入指定的txt文件中
 def read_excel():
-    filename='../data/description_product5.txt'
-    keyword_sheet='keyword'
-    country_sheet='allcountry'
+    filename='../data/description_product7.txt'
+    keyword_sheet='描述性词2'
+    country_sheet='product'
     data=[]
     wb = xlrd.open_workbook(filename=file)#打开文件
     print(wb.sheet_names())#获取所有表格名字
@@ -33,28 +33,24 @@ def read_excel():
     for i1 in range(sheet1.nrows):
         str1=sheet1.cell_value(i1,0)
         if str1 != '':
-            # print('不为空')
-            # print(str1)
             for i2 in range(sheet2.nrows):
                 str2 = sheet2.cell_value(i2, 0)
                 str=str1+' '+str2
                 write_txt(str,filename)
                 # print(str)
-                try:
-                    sheet3 = wb.sheet_by_name(str2)  # 通过名字获取表格
-                    for i3 in range(sheet3.nrows):
-                        str3 = sheet3.cell_value(i3, 0)
-                        # print('存在')
-                        str=str1+' '+str2+' '+str3
-                        write_txt(str,filename)
-                except Exception:
-                    # print('没有找到该表单')
-                    # print(str)
-                    pass
+                # try:
+                #     sheet3 = wb.sheet_by_name(str2)  # 通过名字获取表格
+                #     for i3 in range(sheet3.nrows):
+                #         str3 = sheet3.cell_value(i3, 0)
+                #         str=str1+' '+str2+' '+str3
+                #         write_txt(str,filename)
+                # except Exception:
+                #     print('没有找到该表单')
+                #     pass
 read_excel()
 #读取excel文件 并且根据sheet表单名字 将每第一列内容进行拼接（拼接对象是与内容一样的表单） 并且写入指定的txt文件中
 def read_excel_test():
-    filename='../data/description_product3.txt'
+    filename='../data/description_product6.txt'
     keyword_sheet='描述性词语'
     country_sheet='product'
     data=[]
@@ -80,7 +76,7 @@ def read_excel_test():
                     print(str)
                     write_txt(str, filename)
 
-    print(ord('A'))
+    print('结束')
     # print(ord('a'))
 # read_excel_test()
 
