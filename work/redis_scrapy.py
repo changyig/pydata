@@ -56,10 +56,11 @@ class RedisSet(object):
         # 默认返回当前对象列表的值
         item = self.__db.srandmember(self.key ,count)
         return item
-if __name__=='__main__':
-    redis_object=RedisSet('keyword_set')
-    # with open(r"./thedeli.txt", 'r', encoding='utf-8') as infiles:
-    #     lines = infiles.readlines()
-    #     for line in lines:
-    #        redis_object.put(line)
-    print(redis_object.show_queue())
+# if __name__=='__main__':
+#     # redis_object=RedisSet('keyword_set')
+#     redis_object=RedisQueue('keyword')
+#     # with open(r"./thedeli.txt", 'r', encoding='utf-8') as infiles:
+#     #     lines = infiles.readlines()
+#     #     for line in lines:
+#     #        redis_object.put(line)
+#     print(redis_object.show_queue())
