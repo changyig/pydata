@@ -56,11 +56,18 @@ class RedisSet(object):
         # 默认返回当前对象列表的值
         item = self.__db.srandmember(self.key ,count)
         return item
-# if __name__=='__main__':
+'''
+    读取指定的文件 并且把文件中内容放在redis队列中
+    流程：text-->line-->redis(list)
+'''
+def read_text_redis(redis_object,filename=''):
+    with open(filename, 'r', encoding='utf-8') as infiles:
+        lines = infiles.readlines()
+        for line in lines:
+           redis_object.put(line)
+if __name__=='__main__':
+    filename=r"./sitemap_url.txt"
 #     # redis_object=RedisSet('keyword_set')
-#     redis_object=RedisQueue('keyword')
-#     # with open(r"./thedeli.txt", 'r', encoding='utf-8') as infiles:
-#     #     lines = infiles.readlines()
-#     #     for line in lines:
-#     #        redis_object.put(line)
-#     print(redis_object.show_queue())
+    redis_object=RedisQueue('keyword_url')
+    print(redis_object.qsize())
+    # read_text_redis(redis_object,filename)
