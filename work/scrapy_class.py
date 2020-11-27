@@ -13,7 +13,7 @@ class scrapy:
     '''
     def __init__(self):
         self.read_filename=''
-        self.write_filename='montometservice.pl.txt'
+        self.write_filename='./montometservice.pl.txt'
         self.readdir=r''
         self.writedir=r''
         self.url='https://www.montometservice.pl/sitemap.xml'
@@ -50,7 +50,8 @@ class scrapy:
         #     self.make_file(filename)
 
     '''
-       #说明: 根据url读取相应的内容 并且存入到指定的文件中
+       #说明: 根据站点地图中的url读取相应的内容 并且存入到指定的文件中
+       #说明:sitemap.xml-->url-->request.get-->titile-->txt
     '''
     def read_sitemap_keyword(self):
         url = self.url
@@ -84,6 +85,26 @@ class scrapy:
                         print(e)
         except Exception as e:
             print(e)
+
+    '''
+      #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
+      #流程:sitemap.xml-->url-->txt
+   '''
+    def sitemap_url_txt(self):
+        url = self.url
+        filename=self.write_filename
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, "xml")
+        count = soup.find_all(name="loc")
+        num = 0
+        for i in count:
+            url_text = i.string
+            res = requests.get(url_text)
+            soup2 = BeautifulSoup(res.text, "xml")
+            keyword_url = soup2.find_all(name="loc")
+            for url in keyword_url:
+                url = word.string
+                self.write_txt(filename,url)
 if __name__=='__main__':
     scrapy = scrapy()
     scrapy.read_sitemap_keyword()
