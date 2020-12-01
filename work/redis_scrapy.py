@@ -5,7 +5,7 @@ import redis
 class RedisQueue(object):
     def __init__(self, name):
         # redis的默认参数为：host='localhost', port=6379, db=0， 其中db为定义redis database的数量
-        self.__db = redis.Redis(host='127.0.0.1', port=6379)  # 链接数据库
+        self.__db = redis.Redis(host='127.0.0.1', port=6379,decode_responses=True)  # 链接数据库
         self.key = '%s' % ( name)
 
     def qsize(self):
@@ -64,7 +64,7 @@ def read_text_redis(redis_object,filename=''):
     with open(filename, 'r', encoding='utf-8') as infiles:
         lines = infiles.readlines()
         for line in lines:
-           redis_object.put(line)
+           redis_object.put(line.strip('\n'))
 if __name__=='__main__':
     filename=r"./sitemap_url.txt"
 #     # redis_object=RedisSet('keyword_set')
