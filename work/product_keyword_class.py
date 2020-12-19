@@ -39,7 +39,7 @@ class spider:
         soup = BeautifulSoup(response.text, "html.parser")
         pages=soup.find('div',class_="pagenavi")
         keywords_list=soup.find('div',class_="service_area").find_all('li')
-        filename=r'ftsm.txt'
+        filename= r'scrapy_data/ftsm.txt'
         for keywords in keywords_list:
             self.write_txt(keywords.text,filename)
             pass

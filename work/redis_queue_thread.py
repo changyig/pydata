@@ -38,7 +38,7 @@ class CrawlThread(threading.Thread):
                 else:
                     size = self.redis_object.qsize()
                     url = self.get_url_info_from_queue()
-                    print(url)
+                    # print(url)
                     if size > 0:
                         pass
                     else:
@@ -55,7 +55,7 @@ class CrawlThread(threading.Thread):
                                                                          format(progress * 100,'.2f'),
                                                                          format(left_time,'.2f')))
                     print('当前采集器:{},当前title:{},当前url:{}'.format(self.name,title,url))
-                    with open('./sfsm-ch.txt','a',encoding='utf8') as f:
+                    with open('./scrapy_data/transports-speciaux-ch.txt','a',encoding='utf8') as f:
                         f.write(title + '\n')
                 else:
                     pre_url = url

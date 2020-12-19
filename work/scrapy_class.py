@@ -13,7 +13,7 @@ class scrapy:
     '''
     def __init__(self):
         self.read_filename=''
-        self.write_filename='./montometservice.pl.txt'
+        self.write_filename= 'scrapy_data/montometservice.pl.txt'
         self.readdir=r''
         self.writedir=r''
         self.url='https://www.montometservice.pl/sitemap.xml'

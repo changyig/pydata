@@ -4,6 +4,8 @@ import re
 import math
 import random
 import cv2 as cv
+from PIL import Image
+import matplotlib.pyplot as plt
 import pytesseract
 class Tools:
     '''
@@ -13,7 +15,7 @@ class Tools:
         self.read_filename=''
         self.write_filename=''
         self.handle_dir=r'D:\pydata\data\备份txt\备份'
-        self.readdir=r'D:\www\tp560\public\public'
+        self.readdir=r'E:\www\tp572\public\public'
         self.writedir=r'D:\pydata\data\组装结果txt'
         self.open_filename=False
     '''
@@ -33,9 +35,10 @@ class Tools:
     '''
         #说明：批量修改html错误内容
         '''
-    def content_edit(self,content='sdfad <a href="#">Sitemap</a> sdfadsf'):
-        pattern=r'<a href="/contact/contact_us.html" rel="nofollow"><span class="__cf_email__" data-cfemail="d0a1a5b5a2a990a3b9bebfb6a4bdfeb3bfbd">[email&#160;protected]</span></a>'
-        res=content.replace(pattern,'')
+    def content_edit(self,content=''):
+        replace_str='<span  class="swt">Get Latest Price<img src="/images/dianji.gif" alt="Get Latest Price"></span>'
+        pattern=r'<a href="javascript:void(0)" class="swt">Get Latest Price<img src="/images/dianji.gif" alt="Get Latest Price"></a>'
+        res=content.replace(pattern,replace_str)
         # res=re.sub(pattern,'',content)
         return res
 
@@ -100,6 +103,9 @@ class Tools:
                         else:
                             print('没有含有关键词')
 
+    '''
+        识别图片上的验证码 （效果不好）
+    '''
     def picture_identify(self):
         img_path=r'C:\Users\CYG\Desktop\test.png'
         img=cv.imread(img_path)
@@ -112,7 +118,17 @@ class Tools:
         # result_four = resultj[0:4]  # 只获取前4个字符
         # print(result)  # 打印识别的验证码
 
-
+    '''
+        根据图片路径在窗口中显示图片
+    '''
+    def read_img(self,src_path='',name='图片'):
+        img = Image.open(src_path)
+        plt.figure("Image")  # 图像窗口名称
+        plt.imshow(img)
+        plt.axis('off')  # 关掉坐标轴为 off
+        plt.title('image')  # 图像题目
+        plt.show()
 if __name__=='__main__':
     tools=Tools()
-    tools.html_edit()
+    scr_path=r'C:\Users\CYG\Desktop\logo.png'
+    tools.read_img(scr_path)
