@@ -13,10 +13,10 @@ class scrapy:
     '''
     def __init__(self):
         self.read_filename=''
-        self.write_filename= 'scrapy_data/montometservice.pl.txt'
+        self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://www.montometservice.pl/sitemap.xml'
+        self.url='https://suberite.pl/sitemap.xml'
         self.open_filename=False
     '''
        #说明：判断文件是否存在 不存在便创建文件
@@ -103,9 +103,10 @@ class scrapy:
             soup2 = BeautifulSoup(res.text, "xml")
             keyword_url = soup2.find_all(name="loc")
             for url in keyword_url:
-                url = word.string
+                url = url.string
+                print(url)
                 self.write_txt(filename,url)
 if __name__=='__main__':
     scrapy = scrapy()
-    scrapy.read_sitemap_keyword()
+    scrapy.sitemap_url_txt()
     print('结束执行')

@@ -17,11 +17,24 @@ class Data:
         self.flag = True
         self.start_time = time.time()
         self.currentLine = 0
-        self.mysqlNum = 0  # 插入数据库的数量
+        self.num = 0  # 插入数据库的数量
+        self.website = 'suberite.pl'  # 网站域名
         self.cursor = self.connect.cursor()
+        self.bie_or_bar = 1 #1:bie 2:bar
+    def get_num(self):
+        # sql = "select type,count(*) as num,origin from all_keyword_data where origin like '%transports-speciaux.ch%' GROUP BY type"
+        origin_value ="'%"+self.website+"%'"
+        sql = "select count(*) as num  from all_keyword_data where origin like {} ".format(origin_value)
+        self.cursor.execute(sql)
+        res=self.cursor.fetchall()
+        return res
     def get_data(self):
-        sql = "select type,count(*) as num,origin from all_keyword where origin like '%transports-speciaux.ch%' GROUP BY type"
-        # sql = "select words ,count(*) as num ,id from all_keyword where origin='transports-speciaux.ch' group by words"
+        origin_value = "'%" + self.website + "%'"
+        if self.bie_or_bar==1:
+            sql = "select type,count(*) as num,origin from all_keyword_data where origin like {} GROUP BY type".format(origin_value)
+        else:
+            sql = "select words ,count(*) as num ,id from all_keyword_data where origin like {} group by words".format(
+                origin_value)
         self.cursor.execute(sql)
         res=self.cursor.fetchall()
         return res
@@ -30,13 +43,15 @@ class Data:
         x=[]
         y=[]
         data=self.get_data()
+        num_tupple=self.get_num()
+        for i in num_tupple:
+            self.num=i[0]
         for i in data:
             x.append(i[0])
             y.append(i[1])
         plt.xlim(0,max(x))
-        print(max(x))
         p1 = plt.bar(x,height=y,width=0.5)
-        plt.title('words')
+        plt.title("{}:words".format(self.num))
         plt.show()
         pass
     def plot_show(self):
@@ -55,8 +70,7 @@ class Data:
         explode=[]
         for i in x:
             explode.append(0.5)
-        labels = 'transports-speciaux.ch'  # 设置标签
-        plt.title(labels)
+        plt.title(self.website)
         sizes = x  # 占比，和为100
         # explode = (0,0.1,0,0)  # 展开第二个扇形，即Hogs，间距为0.1
         plt.pie(sizes,labels=y,autopct='%1.1f%%',shadow=True,
@@ -65,5 +79,9 @@ class Data:
         plt.show()
 if __name__ == '__main__':
     data = Data()
-    data.pie_show()
+    if data.bie_or_bar==1:
+        data.pie_show()
+    else:
+        data.bar_show()
+    # data.pie_show()
     print('结束执行')

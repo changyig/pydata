@@ -19,8 +19,8 @@ class Mysql:
         # 通过cursor执行增删查改
         self.cursor = self.connect.cursor()
     def read_txt_mysql(self):#（0 未知 1是地区词 2 不是地区词）
-        origin='transports-speciaux.ch'
-        filename= r"./scrapy_data/transports-speciaux-ch.txt"
+        origin='suberite.pl'
+        filename= r"./scrapy_data/suberite.pl.txt"
         country=0
         remark='排名比较好的网站'
         with open(filename, 'r',encoding='utf-8') as infile:

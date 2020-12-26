@@ -66,7 +66,7 @@ def read_text_redis(redis_object,filename=''):
         for line in lines:
            redis_object.put(line.strip('\n'))
 if __name__=='__main__':
-    filename=r"./sitemap_url.txt"
+    filename= r"scrapy_data/sitemap_url.txt"
 #     # redis_object=RedisSet('keyword_set')
     redis_object=RedisQueue('keyword_url')
     print(redis_object.qsize())

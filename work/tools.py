@@ -15,7 +15,7 @@ class Tools:
         self.read_filename=''
         self.write_filename=''
         self.handle_dir=r'D:\pydata\data\备份txt\备份'
-        self.readdir=r'E:\www\tp572\public\public'
+        self.readdir=r'E:\www\tp584\public\public\about'
         self.writedir=r'D:\pydata\data\组装结果txt'
         self.open_filename=False
     '''
@@ -36,11 +36,21 @@ class Tools:
         #说明：批量修改html错误内容
         '''
     def content_edit(self,content=''):
-        replace_str='<span  class="swt">Get Latest Price<img src="/images/dianji.gif" alt="Get Latest Price"></span>'
-        pattern=r'<a href="javascript:void(0)" class="swt">Get Latest Price<img src="/images/dianji.gif" alt="Get Latest Price"></a>'
-        res=content.replace(pattern,replace_str)
+        replace_str='aaaaaaa'
+        # content = 'aaaaa<script> $function(){   sssss</script>aaaaa'
+        print(content)
+        pattern='<script>.*?</script>'
+        result=re.search(pattern,content)
+        print(result)
+        if result:
+            print('存在')
+            res=content.replace(pattern,replace_str)
+            return res
+        else:
+            print('bu 存在')
+            return None
         # res=re.sub(pattern,'',content)
-        return res
+
 
     '''
     #说明：批量修改html错误内容
@@ -55,10 +65,15 @@ class Tools:
                     with open(root+'\\'+filename, "r", encoding="utf-8") as file_obj,open(root+'\\'+"%s.bak" % filename, "w", encoding="utf-8") as fwrite:
                         content=file_obj.read()
                         content=self.content_edit(content)
-                        fwrite.write(content)
-                    os.remove(root+'\\'+filename)
-                    os.rename(root+'\\'+"%s.bak" % filename, root+'\\'+filename)
-                    print('已经替换,文件路径:{}，文件名字:{}'.format(root,filename))
+                        if content:
+                            fwrite.write(content)
+                            os.remove(root + '\\' + filename)
+                            os.rename(root + '\\' + "%s.bak" % filename,root + '\\' + filename)
+                            print('已经替换,文件路径:{}，文件名字:{}'.format(root,filename))
+                        else:
+                            pass
+
+
 
     '''
        将字符串中的数字替换掉  将txt里的除了a 以外的单个字符删除掉
@@ -130,5 +145,7 @@ class Tools:
         plt.show()
 if __name__=='__main__':
     tools=Tools()
-    scr_path=r'C:\Users\CYG\Desktop\logo.png'
-    tools.read_img(scr_path)
+    tools.html_edit()
+    # tools.content_edit()
+    # scr_path=r'C:\Users\CYG\Desktop\logo.png'
+    # tools.read_img(scr_path)
