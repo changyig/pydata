@@ -19,15 +19,15 @@ class Mysql:
         # 通过cursor执行增删查改
         self.cursor = self.connect.cursor()
     def read_txt_mysql(self):#（0 未知 1是地区词 2 不是地区词）
-        origin='suberite.pl'
-        filename= r"./scrapy_data/suberite.pl.txt"
+        origin='trinitytrade.in'
+        filename= r"./scrapy_data/trinitytrade.in.txt"
         country=0
         remark='排名比较好的网站'
         with open(filename, 'r',encoding='utf-8') as infile:
             for line in infile:
                 try:
-                    sql = "INSERT INTO all_keyword_data(keyword,origin,createtime,country,remark) VALUES(%s,%s,%s,%s,%s)"
-                    self.cursor.execute(sql, (line, origin, int(time.time()),country,remark))
+                    sql = "INSERT INTO all_keyword(keyword,origin,createtime,country,remark) VALUES(%s,%s,%s,%s,%s)"
+                    self.cursor.execute(sql, (line.strip('\n'), origin, int(time.time()),country,remark))
                     self.cursor.connection.commit()
                     self.mysqlNum = self.mysqlNum + 1
                     print('成功插入数据库的数量:{}'.format(self.mysqlNum))

@@ -118,16 +118,16 @@ class handleTxt:
     '''
     去除txt文档中 每行左边的空格 以及空行
     '''
-    def filter_keyword(self):
+    def filter_txt(self):
         filename = r'C:\Users\CYG\Desktop\linshi.txt'
         file2 = open(r'C:\Users\CYG\Desktop\linshi2.txt', 'a', encoding='utf-8')
         with open(filename, mode='r', encoding='utf-8') as ff:
             for i in ff.readlines():
                 str = i.lstrip()
-                str=' '.join(str.split())
+                # str=' '.join(str.split())
                 if str == '\n':
-                    print(str)
                     str = str.strip('\n')
+                print(str)
                 file2.write(str)
     '''
     将字符串中的数字替换掉  将txt里的除了a 以外的单个字符删除掉
@@ -206,7 +206,7 @@ if __name__=='__main__':
     # hd.read_txt_make()
     # hd.filter_digital_txt()
     # hd.filter_space_txt()
-    hd.url_txt()
+    hd.filter_txt()
     print('运行结束')
     # str=' a s  svadaf12 ad    adsfa '
     # str = str.lstrip()

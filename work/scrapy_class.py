@@ -16,7 +16,7 @@ class scrapy:
         self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://suberite.pl/sitemap.xml'
+        self.url='https://www.trinitytrade.in/sitemap.xml'
         self.open_filename=False
     '''
        #说明：判断文件是否存在 不存在便创建文件
@@ -27,15 +27,6 @@ class scrapy:
         else:
             with open(filename, mode='w', encoding='utf-8') as ff:
                 print("文件创建成功！")
-        # if os.path.exists(filename):
-        #     self.open_filename=open(filename, mode='w', encoding='utf-8')
-        #     print('第一种刚开启文件:{}'.format(filename))
-        # else:
-        #     if self.open_filename :
-        #         pass
-        #     else:
-        #         self.open_filename=open(filename, mode='w', encoding='utf-8')
-        #         print('第二种刚开启文件:{}'.format(filename))
 
     '''
        #说明：向指定文件中写入内容
@@ -43,7 +34,7 @@ class scrapy:
     def write_txt(self,filename,keyword ):
         self.make_file(filename)
         with open(filename, "a", encoding='utf-8') as f:
-            f.write(keyword + '\n')
+            f.write(keyword.strip('\n') + '\n')
         # if self.open_filename :
         #     self.open_filename.write(keyword+ '\n')
         # else:
@@ -106,7 +97,22 @@ class scrapy:
                 url = url.string
                 print(url)
                 self.write_txt(filename,url)
+
+    '''
+      #说明:根据抓取到的链接地址eg:https://test.in/13096/machine_needed_for_stone_crushing_plant.html 将关键词进行分析存储起来
+      #流程:sitemap.xml-->url-->keyword-->存储
+    '''
+    def test(self,filename=''):
+        write_filename='scrapy_data/trinitytrade.in.txt'
+        with open(filename,mode='r',encoding='utf-8') as ff:
+            for url in ff.readlines():
+                path1 = url.split('/')[-1]
+                str_list = path1.replace('.html','').split('_')
+                keyword = ' '.join(str_list)
+                self.write_txt(write_filename,keyword)
 if __name__=='__main__':
+    filename='scrapy_data/sitemap_url.txt'
     scrapy = scrapy()
-    scrapy.sitemap_url_txt()
+    # scrapy.sitemap_url_txt()
+    scrapy.test(filename)
     print('结束执行')

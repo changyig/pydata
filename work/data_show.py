@@ -18,9 +18,9 @@ class Data:
         self.start_time = time.time()
         self.currentLine = 0
         self.num = 0  # 插入数据库的数量
-        self.website = 'suberite.pl'  # 网站域名
+        self.website = 'trinitytrade.in'  # 网站域名
         self.cursor = self.connect.cursor()
-        self.bie_or_bar = 1 #1:bie 2:bar
+        self.bie_or_bar = 2 #1:bie 2:bar
     def get_num(self):
         # sql = "select type,count(*) as num,origin from all_keyword_data where origin like '%transports-speciaux.ch%' GROUP BY type"
         origin_value ="'%"+self.website+"%'"
