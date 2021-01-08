@@ -16,7 +16,7 @@ class scrapy:
         self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://www.trinitytrade.in/sitemap.xml'
+        self.url='https://www.cafe-feuerstein.ch/sitemap.xml'
         self.open_filename=False
     '''
        #说明：判断文件是否存在 不存在便创建文件
@@ -79,7 +79,7 @@ class scrapy:
 
     '''
       #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
-      #流程:sitemap.xml-->url-->txt
+      #流程:sitemap.xml-->sitemap(1,2,3..).xml-->url-->txt
    '''
     def sitemap_url_txt(self):
         url = self.url
@@ -99,8 +99,24 @@ class scrapy:
                 self.write_txt(filename,url)
 
     '''
+         #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
+         #流程:sitemap.xml-->-->url-->存储到txt
+      '''
+
+    def sitemap_url(self):
+        url = self.url
+        filename = self.write_filename
+        r = requests.get(url,timeout=10)
+        soup = BeautifulSoup(r.text,"xml")
+        keyword_url = soup.find_all(name="loc")
+        for url in keyword_url:
+            url = url.string
+            print(url)
+            self.write_txt(filename,url)
+
+    '''
       #说明:根据抓取到的链接地址eg:https://test.in/13096/machine_needed_for_stone_crushing_plant.html 将关键词进行分析存储起来
-      #流程:sitemap.xml-->url-->keyword-->存储
+      #流程:sitemap.xml-->url-->keyword解析-->存储
     '''
     def test(self,filename=''):
         write_filename='scrapy_data/trinitytrade.in.txt'
@@ -113,6 +129,6 @@ class scrapy:
 if __name__=='__main__':
     filename='scrapy_data/sitemap_url.txt'
     scrapy = scrapy()
-    # scrapy.sitemap_url_txt()
-    scrapy.test(filename)
+    scrapy.sitemap_url_txt()
+    # scrapy.test(filename)
     print('结束执行')

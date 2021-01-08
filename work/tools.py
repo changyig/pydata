@@ -7,6 +7,7 @@ import cv2 as cv
 from PIL import Image
 import matplotlib.pyplot as plt
 import pytesseract
+import hashlib
 class Tools:
     '''
     #说明：实际工作中遇见的一些问题，进行简便操作
@@ -143,9 +144,20 @@ class Tools:
         plt.axis('off')  # 关掉坐标轴为 off
         plt.title('image')  # 图像题目
         plt.show()
+
+    ##处理获取到url链接地址
+    def test(self):
+        page=1
+        str1='https://zhidao.baidu.com/question/1612130363481735027.html?fr=iks&word=%C6%C6%CB%E9%BB%FA&ie=gbk'
+        str2= (str1+str(page)).encode(encoding='UTF-8')
+        onlyid = hashlib.md5(str2).hexdigest()
+        # str=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
+        print(onlyid)
 if __name__=='__main__':
     tools=Tools()
-    tools.html_edit()
+    # tools.html_edit()
+    # str="window.location.href='http://www.baidu.com/s?pc=1&word=碎石破碎面要求&rsv_dl=0_cont_wz_23&rsf=111&tn=SE_PcZhidaoqwyss_e1nmnxgw'"
+    tools.test()
     # tools.content_edit()
     # scr_path=r'C:\Users\CYG\Desktop\logo.png'
     # tools.read_img(scr_path)

@@ -190,8 +190,15 @@ class handleTxt:
         pass
 
     '''
+        过滤文本中连续的空格
+    '''
+
+    def filter_space(self,str=''):
+        str = ' '.join(str.split())
+        return str
+    '''
        过滤文本中连续的空格
-       '''
+    '''
 
     def url_txt(self):
         open_filename = r'C:\Users\CYG\Desktop\url.txt'
@@ -206,7 +213,7 @@ if __name__=='__main__':
     # hd.read_txt_make()
     # hd.filter_digital_txt()
     # hd.filter_space_txt()
-    hd.filter_txt()
+    # hd.filter_txt()
     print('运行结束')
     # str=' a s  svadaf12 ad    adsfa '
     # str = str.lstrip()
