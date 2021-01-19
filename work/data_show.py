@@ -23,7 +23,7 @@ class Data:
         self.num = 0  # 插入数据库的数量
         self.website = 'kawiarniapinokio.pl'  # 网站域名
         self.cursor = self.connect.cursor()
-        self.bie_or_bar = 2 #1:bie 2:bar
+        self.bie_or_bar = 2 #1:bie->product 2:bie->materials 3:bar->words length
     #获取指定表格的总得数量
     def get_num(self):
         # sql = "select type,count(*) as num,origin from all_keyword_data where origin like '%transports-speciaux.ch%' GROUP BY type"
@@ -108,12 +108,40 @@ class Data:
         plt.axis('equal')  # 保证饼状图是正圆，否则会有一点角度偏斜
         # plt.figure("bie")
         plt.show()
+    # 返回元祖数据格式 （数量+id+物料名字）
+    def get_material_bie(self):
+        material=[]
+        sql="select count(*) as num,material_id,name from all_keyword_data a left join materials b on a.material_id=b.id where a.origin='"+self.website+"'  group by a.material_id"
+        material_sql="select id,name from materials "
+        res=self.mysql.query(sql)
+        return res
+ #物料词和非物料词扇形图
+    def bar3(self):
+        #（数量+id+物料名字）
+        temp_x = []
+        y = []
+        num_tupple = self.get_material_bie()
+        for i in num_tupple:
+            temp_x.append(i[2])
+            y.append(i[0])
+        x=tuple(temp_x)
+        print(x,y)
+        plt.rcParams['font.sans-serif'] = ['SimHei']
+        plt.rcParams['axes.unicode_minus'] = False
+        x = range(len(temp_x))
+        p1 = plt.bar(x,y)
+        plt.xticks(x,temp_x)
+        plt.show()
+        pass
 if __name__ == '__main__':
     mysql = Mysql(dbname='industro')
     data = Data(mysql)
+    data.bar3()
     # data.pie_show()
-    if data.bie_or_bar==1:
-        data.pie_show()
-    else:
-        data.bar_show()
+    # if data.bie_or_bar==1:
+    #     data.pie_show()
+    # elif data.bie_or_bar==2:
+    #     data.pie_show2()
+    # else:
+    #     data.bar_show()
     print('结束执行')

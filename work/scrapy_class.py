@@ -16,7 +16,7 @@ class scrapy:
         self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://www.ardon-gare.ch/sitemap.xml'
+        self.url='https://www.bologna2019.ch//0813th/sitemap.xml'
         self.open_filename=False
     '''
        #说明：判断文件是否存在 不存在便创建文件

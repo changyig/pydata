@@ -99,7 +99,6 @@ class Mysql:
         try:
             if sql=='':
                 sql=self.makesql()
-            # print(sql)
             self.cursor.execute(sql)
             list_data = self.cursor.fetchall()
         except Exception as e:
@@ -192,15 +191,23 @@ class Mysql:
                     else:
                         fields_value.append('"'+str(value)+ '"')
                 self.sqlinsert = ' ('+' , '.join(fields_name)+') values ('+' , '.join(fields_value)+')'
-            # print(self.sqlinsert)
             sql=self.makesql('insert')
-            # print(sql)
             self.cursor.execute(sql)
             self.connect.commit()
             return self.connect.affected_rows()
         except Exception as e:
             print(e)
             self.connect.rollback()
+            return self
+
+    def query(self,sql=''):
+        try:
+            print(sql)
+            self.cursor.execute(sql)
+            list_data = self.cursor.fetchall()
+            return list_data
+        except Exception as e:
+            print(e)
             return self
     def filter_str(self,str=''):
         str=str.strip().replace("'",'').replace('"','')
