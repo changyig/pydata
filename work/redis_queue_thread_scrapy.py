@@ -5,7 +5,7 @@ import time
 import json
 from bs4 import BeautifulSoup
 from redis_scrapy import RedisQueue
-
+from lxml import etree
 # 采集线程列表
 crawl_thread_list = []
 for i in range(20):
@@ -48,14 +48,7 @@ class CrawlThread(threading.Thread):
                     pre_url = None
                     keyword = BeautifulSoup(keyword_html.text,"html.parser")
                     title = keyword.title.string
-                    progress = (self.queue_all - size) / self.queue_all
-                    left_time = ((time.time() - self.start_time) / progress - (time.time() - self.start_time)) / 60
-                    print('队列总个数：{}，剩余个数：{},当前进度：{}%,预计剩余时间：{}分钟'.format(self.queue_all,size,
-                                                                         format(progress * 100,'.2f'),
-                                                                         format(left_time,'.2f')))
-                    print('当前采集器:{},当前title:{},当前url:{}'.format(self.name,title,url))
-                    with open('./scrapy_data/www.acidacid.ch.txt','a',encoding='utf8') as f:
-                        f.write(title + '\n')
+
                 else:
                     pre_url = url
                     print('当前采集器:{},休息10秒,当前url:{}'.format(self.name,pre_url))
@@ -71,6 +64,9 @@ class CrawlThread(threading.Thread):
                     time.sleep(10)
 
         print('%s结束采集数据....' % self.name)
+    def get_content_page(self,html=''):
+        page=etree.HTML(html)
+        print(page)
     # 从队列中获取一个待下载的URL
     def get_url_info_from_queue(self):
         while True:

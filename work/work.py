@@ -19,7 +19,8 @@ class handleTxt:
         self.readdir=r'D:\pydata\data\组装txt'
         self.writedir=r'D:\pydata\data\组装结果txt'
         self.make_num=60000
-        self.open_filename=False
+        self.open_filename=r'C:\Users\CYG\Desktop\linshi.txt'
+        self.write_filename=r'C:\Users\CYG\Desktop\linshi2.txt'
     '''
     #判断文件是否存在 不存在就创建文件
     '''
@@ -116,19 +117,27 @@ class handleTxt:
             out.write(line)
 
     '''
-    去除txt文档中 每行左边的空格 以及空行
+    去除txt文档中 每行左边的空格 以及空行 全是特殊字符
     '''
     def filter_txt(self):
-        filename = r'C:\Users\CYG\Desktop\linshi.txt'
-        file2 = open(r'C:\Users\CYG\Desktop\linshi2.txt', 'a', encoding='utf-8')
+        filename = self.open_filename
+        file2 = open(self.write_filename, 'a', encoding='utf-8')
         with open(filename, mode='r', encoding='utf-8') as ff:
             for i in ff.readlines():
                 str = i.lstrip()
-                # str=' '.join(str.split())
-                if str == '\n':
+                str=self.filter_nochar(str)
+                if str == '\n' :
                     str = str.strip('\n')
                 print(str)
                 file2.write(str)
+
+    '''
+        去除字符串中全是特殊字符
+        '''
+    def filter_nochar(self,text=''):
+        cop = re.compile("[^\u4e00-\u9fa5^a-z^A-Z^0-9^\n^\s^.]")  # 匹配不是中文、大小写、数字的其他字符
+        text = cop.sub('',text)
+        return text
     '''
     将字符串中的数字替换掉  将txt里的除了a 以外的单个字符删除掉
     open_file:读取文件
@@ -150,8 +159,8 @@ class handleTxt:
     过滤文本中连续的空格
     '''
     def filter_space_txt(self):
-        open_filename = r'C:\Users\CYG\Desktop\linshi.txt'
-        write_filename = open(r'C:\Users\CYG\Desktop\linshi2.txt', 'a', encoding='utf-8')
+        open_filename = self.open_filename
+        write_filename = open(self.write_filename, 'a', encoding='utf-8')
         with open(open_filename, mode='r', encoding='utf-8') as ff:
             for i in ff.readlines():
                 str = i.lstrip()
@@ -192,14 +201,12 @@ class handleTxt:
     '''
         过滤文本中连续的空格
     '''
-
     def filter_space(self,str=''):
         str = ' '.join(str.split())
         return str
     '''
        过滤文本中连续的空格
     '''
-
     def url_txt(self):
         open_filename = r'C:\Users\CYG\Desktop\url.txt'
         write_filename = open(r'C:\Users\CYG\Desktop\url2.txt','a',encoding='utf-8')
@@ -213,7 +220,7 @@ if __name__=='__main__':
     # hd.read_txt_make()
     # hd.filter_digital_txt()
     # hd.filter_space_txt()
-    # hd.filter_txt()
+    hd.filter_txt()
     print('运行结束')
     # str=' a s  svadaf12 ad    adsfa '
     # str = str.lstrip()
