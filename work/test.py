@@ -46,15 +46,23 @@ def test():
     translator = Translator(service_urls)
     print(translator.translate('星期日').text)
 def test1():
-    url='https://www.hnhxpsj.com/cp/n1851.htm'
-    html = requests.get(url,timeout=10).content.decode('utf8')
-    # print(html)
-    tree=etree.HTML(html)
-    title=tree.xpath("//h1/text()")
-    # content = tree.xpath("//div[@class='news-left']/*[not(name=div)]/text()")
-    content = tree.xpath("//div[@class='news-left']/*[not(contains(@class,'news-art1')) and not(contains(@class,'show-msg')) and not(contains(@class,'xg-news'))]//text()")
-    print(title)
-    print(content)
+    try:
+        url='https://www.hnhxpsj.com/cp/n1851.htm'
+        html = requests.get(url,timeout=10).content.decode('utf8')
+        # print(html)
+        tree=etree.HTML(html)
+        title=tree.xpath("//h1/text()")
+        content_list = tree.xpath("//div[@class='news-left']/*[not(contains(@class,'news-art1')) and not(contains(@class,'show-msg')) and not(contains(@class,'xg-news'))]//text()")
+        content=''.join(content_list)
+        title=''.join(title)
+        print(title)
+        print(content)
+        if title and content:
+            return [title,content]
+    except Exception as e:
+        print(e)
+        return None
 # res=quicktranslate.get_translate_google('星期日')
 # print(res)
-test1()
+data=test1()
+print(data)

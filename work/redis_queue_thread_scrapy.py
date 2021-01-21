@@ -46,9 +46,14 @@ class CrawlThread(threading.Thread):
                 keyword_html = requests.get(url,timeout=10)
                 if keyword_html.status_code == 200:
                     pre_url = None
-                    keyword = BeautifulSoup(keyword_html.text,"html.parser")
-                    title = keyword.title.string
-
+                    data=self.get_content_page(keyword_html)
+                    print(data)
+                    if data:
+                        pass
+                    else:
+                        pre_url = url
+                        print('当前采集器:{},休息10秒,当前url:{}'.format(self.name,pre_url))
+                        time.sleep(10)
                 else:
                     pre_url = url
                     print('当前采集器:{},休息10秒,当前url:{}'.format(self.name,pre_url))
@@ -65,8 +70,21 @@ class CrawlThread(threading.Thread):
 
         print('%s结束采集数据....' % self.name)
     def get_content_page(self,html=''):
-        page=etree.HTML(html)
-        print(page)
+        try:
+            html = html.content.decode('utf8')
+            tree = etree.HTML(html)
+            title = tree.xpath("//h1/text()")
+            content_list = tree.xpath(
+                "//div[@class='news-left']/*[not(contains(@class,'news-art1')) and not(contains(@class,'show-msg')) and not(contains(@class,'xg-news'))]//text()")
+            content = ''.join(content_list)
+            title = ''.join(title)
+            print(title)
+            print(content)
+            if title and content:
+                return [title,content]
+        except Exception as e:
+            print(e)
+            return None
     # 从队列中获取一个待下载的URL
     def get_url_info_from_queue(self):
         while True:
