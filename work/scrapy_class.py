@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os
+from string_class import HandleStr
 header={
     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'
 }
@@ -11,13 +12,14 @@ class scrapy:
           #说明：③将新组装txt文件写入的文件名字（self.write_filename）
           #说明：④读取文件的名字（self.read_filename）
     '''
-    def __init__(self):
+    def __init__(self,Strclass=None):
         self.read_filename=''
         self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://www.acidacid.ch/sitemap.xml'
+        self.url='https://www.hnhxpsj.com/sitemap.xml'
         self.open_filename=False
+        self.Strclass=Strclass
     '''
        #说明：判断文件是否存在 不存在便创建文件
     '''
@@ -99,6 +101,23 @@ class scrapy:
                 self.write_txt(filename,url)
 
     '''
+          #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
+          #流程:sitemap.xml-->sitemap(1,2,3..).xml-->url-->txt
+       '''
+
+    def sitemap_zh_url_txt(self):
+        url = self.url
+        filename = self.write_filename
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text,"xml")
+        keyword_url = soup.find_all(name="loc")
+        for url in keyword_url:
+            url = url.string
+            print(url)
+            res = self.Strclass.search_str(url)
+            if res:
+                self.write_txt(filename,url)
+    '''
          #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
          #流程:sitemap.xml-->-->url-->存储到txt
       '''
@@ -128,7 +147,11 @@ class scrapy:
                 self.write_txt(write_filename,keyword)
 if __name__=='__main__':
     filename='scrapy_data/sitemap_url.txt'
-    scrapy = scrapy()
-    scrapy.sitemap_url_txt()
+    Strclass=HandleStr()
+    scrapy = scrapy(Strclass)
+    #英文sitemap站点地图获取
+    # scrapy.sitemap_url_txt()
+    #中文sitemap站点地图获取
+    scrapy.sitemap_zh_url_txt()
     # scrapy.test(filename)
     print('结束执行')

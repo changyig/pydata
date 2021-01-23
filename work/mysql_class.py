@@ -192,6 +192,7 @@ class Mysql:
                         fields_value.append('"'+str(value)+ '"')
                 self.sqlinsert = ' ('+' , '.join(fields_name)+') values ('+' , '.join(fields_value)+')'
             sql=self.makesql('insert')
+            # print(sql)
             self.cursor.execute(sql)
             self.connect.commit()
             return self.connect.affected_rows()
