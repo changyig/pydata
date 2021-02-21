@@ -17,7 +17,7 @@ class scrapy:
         self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://www.hnhxpsj.com/sitemap.xml'
+        self.url='https://www.polyvert.it/sitemap.xml'
         self.open_filename=False
         self.Strclass=Strclass
     '''
@@ -138,7 +138,7 @@ class scrapy:
       #流程:sitemap.xml-->url-->keyword解析-->存储
     '''
     def test(self,filename=''):
-        write_filename='scrapy_data/trinitytrade.in.txt'
+        write_filename='scrapy_data/in.txt'
         with open(filename,mode='r',encoding='utf-8') as ff:
             for url in ff.readlines():
                 path1 = url.split('/')[-1]
@@ -147,11 +147,12 @@ class scrapy:
                 self.write_txt(write_filename,keyword)
 if __name__=='__main__':
     filename='scrapy_data/sitemap_url.txt'
-    Strclass=HandleStr()
-    scrapy = scrapy(Strclass)
+    # Strclass=HandleStr()
+    # scrapy = scrapy(Strclass)
+    scrapy = scrapy()
     #英文sitemap站点地图获取
-    # scrapy.sitemap_url_txt()
+    scrapy.sitemap_url_txt()
     #中文sitemap站点地图获取
-    scrapy.sitemap_zh_url_txt()
+    # scrapy.sitemap_zh_url_txt()
     # scrapy.test(filename)
     print('结束执行')

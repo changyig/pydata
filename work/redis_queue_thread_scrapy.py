@@ -16,7 +16,10 @@ for i in range(1):
 # 解析线程列表
 parse_thread_list = []
 
-
+'''
+ 说明：根据redis里面的链接地址 抓取中文网站 并存入相应的数据当中
+ 流程：读取redis地址-->线程爬虫-->页面解析-->存入数据库
+'''
 class CrawlThread(threading.Thread):
     def __init__(self,name,redisqueue,queue_all,start_time,mysql=None):
         super().__init__()
