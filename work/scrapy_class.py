@@ -17,7 +17,8 @@ class scrapy:
         self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://www.polyvert.it/sitemap.xml'
+        self.url='https://www.saybolt.pl/sitemap.xml'
+        # self.url='https://www.polyvert.it/sitemap.xml'
         self.open_filename=False
         self.Strclass=Strclass
     '''
@@ -41,6 +42,12 @@ class scrapy:
         #     self.open_filename.write(keyword+ '\n')
         # else:
         #     self.make_file(filename)
+
+    '''
+     #说明：清空txt文本
+    '''
+    def empty_txt(self):
+        open(self.write_filename, 'w').close()
 
     '''
        #说明: 根据站点地图中的url读取相应的内容 并且存入到指定的文件中
@@ -87,6 +94,7 @@ class scrapy:
         url = self.url
         filename=self.write_filename
         r = requests.get(url)
+        # soup = BeautifulSoup(r.content.decode("utf-8-sig").encode("utf-8"), "xml")
         soup = BeautifulSoup(r.text, "xml")
         count = soup.find_all(name="loc")
         num = 0
@@ -94,6 +102,7 @@ class scrapy:
             url_text = i.string
             res = requests.get(url_text)
             soup2 = BeautifulSoup(res.text, "xml")
+            # soup2 = BeautifulSoup(res.content.decode("utf-8-sig").encode("utf-8"), "xml")
             keyword_url = soup2.find_all(name="loc")
             for url in keyword_url:
                 url = url.string
@@ -102,7 +111,32 @@ class scrapy:
 
     '''
           #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
-          #流程:sitemap.xml-->sitemap(1,2,3..).xml-->url-->txt
+          #流程:sitemap.xml-->sitemap(1,2,3..).xml-->sitemap.xml-->url-->txt
+    '''
+
+    def sitemap_3_url_txt(self):
+        url = self.url
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text,"xml")
+        count = soup.find_all(name="loc")
+        for i in count:
+            url_text = i.string
+            res = requests.get(url_text)
+            soup2 = BeautifulSoup(res.text,"xml")
+            sitemap_site = soup2.find_all(name="loc")
+            for sitemap in sitemap_site:
+                res = requests.get(sitemap.string)
+                soup3 = BeautifulSoup(res.text,"xml")
+                keyword_url = soup3.find_all(name="loc")
+                for url in keyword_url:
+                    url = url.string
+                    print(url)
+                    filename = self.write_filename
+                    self.write_txt(filename,url)
+
+    '''
+          #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
+          #流程:sitemap.xml-->sitemap(1,2,3..).xml-->url(过滤功能)-->txt
        '''
 
     def sitemap_zh_url_txt(self):
@@ -119,7 +153,7 @@ class scrapy:
                 self.write_txt(filename,url)
     '''
          #说明: 根据站点地图网址，读取所有的链接并且存入指定的文件中
-         #流程:sitemap.xml-->-->url-->存储到txt
+         #流程:sitemap.xml-->url-->存储到txt
       '''
 
     def sitemap_url(self):
@@ -135,7 +169,7 @@ class scrapy:
 
     '''
       #说明:根据抓取到的链接地址eg:https://test.in/13096/machine_needed_for_stone_crushing_plant.html 将关键词进行分析存储起来
-      #流程:sitemap.xml-->url-->keyword解析-->存储
+      #流程:打开文件-->读取url-->keyword解析-->存储
     '''
     def test(self,filename=''):
         write_filename='scrapy_data/in.txt'
@@ -145,13 +179,32 @@ class scrapy:
                 str_list = path1.replace('.html','').split('_')
                 keyword = ' '.join(str_list)
                 self.write_txt(write_filename,keyword)
+
+    '''
+     #说明:根据抓取到的链接地址eg:https://test.in/13096/machine_needed_for_stone_crushing_plant.html 将关键词进行分析存储起来
+     #流程:打开文件-->读取url-->keyword解析-->存储
+    '''
+
+    def get_str_string(self,filename=''):
+        write_filename = 'scrapy_data/www.gim2pno.pl.txt'
+        with open(filename,mode='r',encoding='utf-8') as ff:
+            for url in ff.readlines():
+                url=url.strip()
+                if url:
+                    # print(url)
+                    keyword=self.Strclass.get_str(url)
+                    # print(keyword)
+                    self.write_txt(write_filename,keyword)
 if __name__=='__main__':
     filename='scrapy_data/sitemap_url.txt'
     # Strclass=HandleStr()
     # scrapy = scrapy(Strclass)
     scrapy = scrapy()
     #英文sitemap站点地图获取
+    scrapy.empty_txt()
     scrapy.sitemap_url_txt()
+    # scrapy.sitemap_3_url_txt()
+    # scrapy.get_str_string('scrapy_data/sitemap_url.txt')
     #中文sitemap站点地图获取
     # scrapy.sitemap_zh_url_txt()
     # scrapy.test(filename)

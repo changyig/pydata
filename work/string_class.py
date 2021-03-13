@@ -63,11 +63,12 @@ class HandleStr(object):
         else:
             return False
 
+    #通过一定的规则 获取指定的字符串并返回
+    def get_str(self,str=''):
+        res=str.split('/')[-2].split('_')[-1].replace('-',' ')
+        return res
+        # print(res)
 if __name__=='__main__':
     Strclass=HandleStr()
-    # str='https://www.hnhxpsj.com/pros/pro91.htm'
-    str='https://www.hnhxpsj.com/nn/pro91.htm'
-    # str='https://www.hnhxpsj.com/cp/'
-    # str='https://www.hnhxpsj.com/news/n1543.htm'
-    # str='https://www.hnhxpsj.com/pros/pro79.htm'
-    Strclass.search_str(str)
+    # Strclass.search_str(str)
+    Strclass.get_str()

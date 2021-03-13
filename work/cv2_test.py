@@ -27,12 +27,12 @@ def img_threshold(img):
     ret, thresh = cv.threshold(Grayimg, 150,255,cv.THRESH_TOZERO)
     show_img(Grayimg)
     return thresh
-img=cv.imread(r"C:\Users\CYG\Desktop\1.png")
-return_img=img_threshold(img)
-pytesseract.pytesseract.tesseract_cmd = r"D:\soft\tesseract-ocr\tesseract.exe"  # 设置pyteseract路径
-result = pytesseract.image_to_string(return_img)  # 图片转文字
-print(result)  # 打印识别的验证码
-show_img(return_img)
+# img=cv.imread(r"C:\Users\CYG\Desktop\1.png")
+# return_img=img_threshold(img)
+# pytesseract.pytesseract.tesseract_cmd = r"D:\soft\tesseract-ocr\tesseract.exe"  # 设置pyteseract路径
+# result = pytesseract.image_to_string(return_img)  # 图片转文字
+# print(result)  # 打印识别的验证码
+# show_img(return_img)
 def add_mask(img):
     text='naprawavolvolodz'
     length=len(text)
@@ -112,8 +112,8 @@ def img_dir_all():
 # img_dir_all()
 def img_file_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
-    dir_path=r'E:\红星办公文件\通用的模版文件\photo\原图片\ProImages'
-    dir_path2=r'E:\红星办公文件\通用的模版文件\photo\原图片\替换\ProImages-3'
+    dir_path=r'E:\photo\images'
+    dir_path2=r'E:\photo\images2'
     for root, dirs, files in os.walk(dir_path):
         if dirs:
             for dir in dirs:
@@ -131,11 +131,11 @@ def img_file_all():
                 img=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
                 # img = cv.imread(root+'\\'+file)
                 print(root+'\\'+file)
-                img_save=contrast_demo(img)
+                img_save=img_flip(img)
                 cv.imencode('.jpg', img_save)[1].tofile(last_dir_path+file)
                 # cv.imwrite(last_dir_path+file, img)
                 print(last_dir_path+file)
-# img_file_all()
+img_file_all()
 def watermark(src_path, mask_path, alpha = 0.3):
     img = cv.imread(src_path)
     h,w = img.shape[0], img.shape[1]

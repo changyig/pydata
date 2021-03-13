@@ -21,7 +21,7 @@ class Data:
         self.start_time = time.time()
         self.currentLine = 0
         self.num = 0  # 插入数据库的数量
-        self.website = 'www.laperlebankiety.pl'  # 网站域名
+        self.website = 'polskapaczkarnia.pl'  # 网站域名
         self.cursor = self.connect.cursor()
         self.bie_or_bar = 3 #1:bie->product 2:bie->materials 3:bar->words length
     #获取指定表格的总得数量

@@ -16,10 +16,7 @@ for i in range(1):
 # 解析线程列表
 parse_thread_list = []
 
-'''
- 说明：根据redis里面的链接地址 抓取中文网站 并存入相应的数据当中
- 流程：读取redis地址-->线程爬虫-->页面解析-->存入数据库
-'''
+
 class CrawlThread(threading.Thread):
     def __init__(self,name,redisqueue,queue_all,start_time,mysql=None):
         super().__init__()
@@ -53,13 +50,12 @@ class CrawlThread(threading.Thread):
                 keyword_html = requests.get(url,timeout=10)
                 if keyword_html.status_code == 200:
                     pre_url = None
-                    data=self.get_content_page(keyword_html)
-                    # print(data)
+                    data=self.get_content_page2(keyword_html)
                     if data:
                         self.insert_mysql(data,url)
                     else:
-                        print('当前采集器:{},休息10秒,当前url:{}'.format(self.name,pre_url))
-                        time.sleep(10)
+                        print('出现错误，当前采集器:{},休息10秒,当前url:{}'.format(self.name,url))
+                        # time.sleep(10)
                 else:
                     pre_url = url
                     print('当前采集器:{},休息10秒,当前url:{}'.format(self.name,pre_url))
@@ -73,23 +69,56 @@ class CrawlThread(threading.Thread):
                     print(e)
                     print('出现错误休眠10秒,当前url:{}'.format(pre_url))
                     time.sleep(10)
-
         print('%s结束采集数据....' % self.name)
+    #将通过对页面的html分析 解析出相对应的标题和内容
+    def get_content_page2(self,html=''):
+        try:
+            html = html.content.decode('gb18030')
+            tree = etree.HTML(html)
+            product_title = tree.xpath("//h1[@class='prodTitle']//text()")
+            product_property = tree.xpath("//div[@class='nyr']/*[not(contains(@class,'txt_name'))]//text()")
+            product_description = tree.xpath("//div[@class='cp_txt two-box']/*[not(contains(@class,'txt_name'))]//text()")
+            product_advantage = tree.xpath("//div[@class='cp_txt three-box']/*[not(contains(@class,'txt_name'))]//text()")
+            product_theory = tree.xpath("//div[@class='cp_txt four-box']/*[not(contains(@class,'txt_name'))]//text()")
+            # table = tree.xpath("//div[@class='cp_txt six-box']//table")
+            # product_tablepara=etree.tostring(table[0], encoding="utf-8").decode()
+            product=[]
+            product.append({'title':''.join(product_title)})
+            product.append({'property':''.join(product_property)})
+            product.append({'description':''.join(product_description)})
+            product.append({'advantage':''.join(product_advantage)})
+            product.append({'theory':''.join(product_theory)})
+            product.append({'tablepara':''})
+            print(product)
+            return product
+        except Exception as e:
+            print(e)
+            return None
     def get_content_page(self,html=''):
         try:
+            print(html)
             html = html.content.decode('utf8')
             tree = etree.HTML(html)
             title = tree.xpath("//h1/text()")
-            content_list = tree.xpath(
-                "//div[@class='news-left']/*[not(contains(@class,'news-art1')) and not(contains(@class,'show-msg')) and not(contains(@class,'xg-news'))]//text()")
+            content_list = tree.xpath("//div[@class='content']/*[not(contains(@id,'computer')) and not(contains(@class,'prev-box')) and not(contains(@class,'xg-news'))]//text()")
             content = ''.join(content_list)
             title = ''.join(title)
+            print(title,content)
             if title and content:
+                # print(title,content)
                 return [title,content]
         except Exception as e:
             print(e)
             return None
     def insert_mysql(self,data,url):
+        try:
+            print(data)
+            res=self.mysql.table('scrapy_product').insert(data)
+            print(res)
+            print('数据插入成功')
+        except Exception as e:
+            print(e)
+    def insert_mysql2(self,data,url):
         try:
             print(self.mysql,data,url)
             page=0
@@ -127,7 +156,5 @@ def main():
     time.sleep(20)
     print('采集结束')
     pass
-
-
 if __name__ == "__main__":
     main()

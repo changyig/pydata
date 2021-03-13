@@ -199,6 +199,15 @@ class handleTxt:
         pass
 
     '''
+           清空txt文本
+    '''
+
+    def empty_txt(self):
+        filename = r'D:\pydata\data\test.txt'
+        open("filename", 'w').close()
+        pass
+
+    '''
         过滤文本中连续的空格
     '''
     def filter_space(self,str=''):

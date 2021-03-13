@@ -153,6 +153,7 @@ class Tools:
         onlyid = hashlib.md5(str2).hexdigest()
         # str=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
         print(onlyid)
+
 if __name__=='__main__':
     tools=Tools()
     # tools.html_edit()
