@@ -8,6 +8,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import pytesseract
 import hashlib
+import numpy as np
 class Tools:
     '''
     #说明：实际工作中遇见的一些问题，进行简便操作
@@ -153,12 +154,42 @@ class Tools:
         onlyid = hashlib.md5(str2).hexdigest()
         # str=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
         print(onlyid)
+    '''
+    说明:根据文件路径 将文件中的所有图片重新命名 并存入对应的文件夹中
+    '''
+    def img_dir_name(self):
+        # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
+        dir_path = r'D:\files\产品图\800.530无水印\202013'
+        dir_path2 = r'D:\files\产品图\800.530无水印\202014'
+        for root,dirs,files in os.walk(dir_path):
+            if dirs:
+                for dir in dirs:
+                    if os.path.exists(dir_path2 + '/' + dir):
+                        pass
+                    else:
+                        print('创建文件:{}'.format(dir_path2 + '/' + dir))
+                        os.makedirs(dir_path2 + '/' + dir)
+            # print(root,dirs,files)
+            i=1
+            for file in files:
 
+                last_dir = root.split('\\')[-1]
+                last_dir_path = dir_path2 + '\\' + last_dir + '\\'
+                img_name = last_dir+'-'+str(i) + '.jpg'
+                i = int(i) + 1
+                if os.path.exists(last_dir_path + img_name):
+                    pass
+                else:
+                    img = cv.imdecode(np.fromfile(root + '\\' + file,dtype=np.uint8),-1)
+                    print(root + '\\' + file)
+                    cv.imencode('.jpg',img)[1].tofile(last_dir_path + img_name)
+                    # cv.imwrite(last_dir_path+file, img)
+                    print(last_dir_path + img_name)
 if __name__=='__main__':
     tools=Tools()
     # tools.html_edit()
     # str="window.location.href='http://www.baidu.com/s?pc=1&word=碎石破碎面要求&rsv_dl=0_cont_wz_23&rsf=111&tn=SE_PcZhidaoqwyss_e1nmnxgw'"
-    tools.test()
+    tools.img_dir_name()
     # tools.content_edit()
     # scr_path=r'C:\Users\CYG\Desktop\logo.png'
     # tools.read_img(scr_path)

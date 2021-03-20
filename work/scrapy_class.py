@@ -5,7 +5,7 @@ from string_class import HandleStr
 header={
     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'
 }
-class scrapy:
+class Scrapy:
     '''
           #说明：①需要遍历组装的文件夹目录（self.readdir）
           #说明：②将新组装txt文件放入的目录（self.writedir）
@@ -17,7 +17,7 @@ class scrapy:
         self.write_filename= 'scrapy_data/sitemap_url.txt'
         self.readdir=r''
         self.writedir=r''
-        self.url='https://www.saybolt.pl/sitemap.xml'
+        self.url='https://ardek.pl/sitemap.xml'
         # self.url='https://www.polyvert.it/sitemap.xml'
         self.open_filename=False
         self.Strclass=Strclass
@@ -195,14 +195,20 @@ class scrapy:
                     keyword=self.Strclass.get_str(url)
                     # print(keyword)
                     self.write_txt(write_filename,keyword)
+    def run_sitemap(self,sitemap=''):
+        self.url=sitemap
+        self.empty_txt()
+        self.sitemap_url_txt()
+        return True
 if __name__=='__main__':
-    filename='scrapy_data/sitemap_url.txt'
+    filename='https://www.numismaticaleuven.be/sitemap.xml'
     # Strclass=HandleStr()
     # scrapy = scrapy(Strclass)
-    scrapy = scrapy()
+    scrapy = Scrapy()
     #英文sitemap站点地图获取
-    scrapy.empty_txt()
-    scrapy.sitemap_url_txt()
+    # scrapy.empty_txt()
+    # scrapy.sitemap_url_txt()
+    scrapy.run_sitemap(filename)
     # scrapy.sitemap_3_url_txt()
     # scrapy.get_str_string('scrapy_data/sitemap_url.txt')
     #中文sitemap站点地图获取

@@ -229,9 +229,4 @@ if __name__=='__main__':
     # hd.read_txt_make()
     # hd.filter_digital_txt()
     # hd.filter_space_txt()
-    hd.filter_txt()
-    print('运行结束')
-    # str=' a s  svadaf12 ad    adsfa '
-    # str = str.lstrip()
-    # str = ' '.join(str.split())
-    # print(str)
+    # hd.filter_txt()

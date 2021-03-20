@@ -84,12 +84,15 @@ class Cv2class:
             dst_channels[i][ul_points[0]: dr_points[0], ul_points[1]: dr_points[1]] += np.array(mask_channels[i] * (a * alpha / 255), dtype=np.uint8)
         dst_img = cv.merge(dst_channels)
         self.show_img(dst_img)
+    def resize_img(self,img):
+        return_img=cv.resize(img,(450,320))
+        return return_img
 if __name__=="__main__":
-    imgpath=r"C:\Users\CYG\Desktop\1.png"
-    imgpath=r"4.jpg"
+    imgpath=r"C:\Users\CYG\Desktop\ball-2.jpg"
+    # imgpath=r"4.jpg"
     img = cv.imread(imgpath)
     cv2class=Cv2class()
     cv2class.show_img(img)
-    img=cv2class.img_kernel(img)
+    img=cv2class.resize_img(img)
     print(img)
     cv2class.show_img(img)

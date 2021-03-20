@@ -68,7 +68,22 @@ class HandleStr(object):
         res=str.split('/')[-2].split('_')[-1].replace('-',' ')
         return res
         # print(res)
+    def str_page(self):
+        str='https://www.google.com/search?q=site:ag-susa.cz&ei=pw5TYO3VMYOC-Qa0_52QCw&start=10&sa=N&ved=2ahUKEwitxYDTtbnvAhUDQd4KHbR_B7IQ8tMDegQIARA6&cshid=1616056076188366'
+        # res=str.split('&')
+        # print(res[2])
+        # res[2]='start=290'
+        cop = re.compile(r"&start=\d+")
+        text = cop.sub('&start=290',str)
+        print(text)
+    def get_digital(self,url=''):
+        str='找到约 6,010 条结果 （用时 0.14 秒）'
+        cop = re.compile(r"（.*）")
+        text = cop.sub('',str)
+        cop = re.compile("[^0-9]")
+        text = cop.sub('',text)
+        print(text)
 if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
-    Strclass.get_str()
+    Strclass.str_page()
