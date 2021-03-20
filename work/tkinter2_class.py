@@ -1,6 +1,7 @@
 import tkinter as tk
 from redis_scrapy import RedisQueue
 from scrapy_class import Scrapy
+from redis_queue_thread import Threadop
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -22,8 +23,7 @@ class Application(tk.Frame):
         self.submit.grid(row=1,column=2)
 
         #输入框按钮
-        self.show = tk.Button(text="展示",fg="red",
-                              command=self.setlabel)
+        self.show = tk.Button(text="展示",fg="red",command=self.setlabel)
         self.show.grid(row=1,column=3,padx=5, pady=5)
 
         #展示区
@@ -34,6 +34,11 @@ class Application(tk.Frame):
         #                       font=('Arial',11),width=15,height=2)
         # self.lable.grid(row=3,column=0)
 
+        #redis框按钮
+        self.redis_read = tk.Button(text="读取redis数量",fg="red",command=self.read_redis)
+        self.redis_read.grid(row=2,column=1,padx=5,pady=5)
+        self.redis_del = tk.Button(text="清空redis数量",fg="red",command=self.del_redis)
+        self.redis_del.grid(row=2,column=2,padx=5,pady=5)
         #展示区
         self.show=tk.Text()
         self.show.grid(row=4, rowspan=5,columnspan=5)
@@ -43,12 +48,20 @@ class Application(tk.Frame):
         #                       command=self.master.destroy)
         # self.quit.grid(row=10,column=0)
 
-    def say_hi(self):
+    # 读取redis数量
+    def read_redis(self):
         redis_object=RedisQueue('keyword_url')
         size=redis_object.qsize()
         print(size)
-
+        self.show_text('redis数据库总数量:{}'.format(size))
+    # 清空redis数量
+    def del_redis(self):
+        redis_object=RedisQueue('keyword_url')
+        redis_object.delete('keyword_url')
+        self.read_redis()
+    # 开始运行程序 过程  sitemap的解析--》存入txt--》读取txt存redis--》运行爬虫程序
     def run_scapy(self):
+        redis_object = RedisQueue('keyword_url')
         sitemap=self.sitemap.get()
         self.show_text(sitemap)
         scrapy = Scrapy()
@@ -56,6 +69,13 @@ class Application(tk.Frame):
         flag=scrapy.run_sitemap(sitemap)
         if flag:
             self.show_text('站点地图获取完成')
+            self.del_redis()
+            redis_object.read_text_redis()
+            self.read_redis()
+            thread_object=Threadop()
+            thread_object.start_thread()
+
+
 
 
     def setlabel(self):
@@ -64,6 +84,7 @@ class Application(tk.Frame):
         flag=self.label_text.set(self.content)
         if flag:
             self.show_text('结束')
+            self.read_redis()
 
     def show_text(self,content=''):
         self.show.insert(tk.INSERT,str(content)+'\n')

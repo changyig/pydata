@@ -32,6 +32,12 @@ class RedisQueue(object):
     def delete(self,key):
         # 默认返回当前对象列表的值
         item = self.__db.delete(key)
+
+    def read_text_redis(self,filename=r"scrapy_data/sitemap_url.txt"):
+        with open(filename,'r',encoding='utf-8') as infiles:
+            lines = infiles.readlines()
+            for line in lines:
+                self.put(line.strip('\n'))
 '''
     redis集合对象操纵
 '''

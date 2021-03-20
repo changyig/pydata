@@ -54,7 +54,7 @@ class CrawlThread(threading.Thread):
                                                                          format(progress * 100,'.2f'),
                                                                          format(left_time,'.2f')))
                     print('当前采集器:{},当前title:{},当前url:{}'.format(self.name,title,url))
-                    with open('./scrapy_data/ardek.pl.txt','a',encoding='utf8') as f:
+                    with open('./scrapy_data/www.numismaticaleuven.be.txt','a',encoding='utf8') as f:
                         f.write(title + '\n')
                 else:
                     pre_url = url
@@ -81,7 +81,19 @@ class CrawlThread(threading.Thread):
                     return url_info
             return url_info
 
-
+# 用该类操作多线程类
+class Threadop:
+    def start_thread(self):
+        # 创建页码队列
+        redisqueue = RedisQueue('keyword_url')
+        qsize = redisqueue.qsize()
+        for i in crawl_thread_list:
+            download_thread = CrawlThread(i,redisqueue,qsize,time.time())
+            download_thread.start()
+        print(qsize)
+        time.sleep(20)
+        print('采集结束')
+        pass
 def main():
     # 创建页码队列
     redisqueue = RedisQueue('keyword_url')
