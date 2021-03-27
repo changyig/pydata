@@ -48,7 +48,11 @@ class HandleStr(object):
         text = cop.sub('',text)
         text = text.replace("\n",'<br/>').replace("-",'').replace('，',',').replace('。','.')
         return text
-
+    #通过正则对字符串只保留字母和数字
+    def retain_digital_letter(self,text=''):
+        pattern=re.compile("[^a-zA-Z0-9]")
+        text = pattern.sub('',text)
+        print(text)
     #通过正则判断字符串是否符合指定的格式
     def search_str(self,text=''):
         pattern=re.compile(r'https://www.hnhxpsj.com/([^pros]).*\.htm', re.I)
@@ -86,4 +90,5 @@ class HandleStr(object):
 if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
-    Strclass.str_page()
+    str='ssf@@@DSFAVA  中昂过电话费————98e95r707*(*^&%*.,/<>?1245'
+    Strclass.retain_digital_letter(str)

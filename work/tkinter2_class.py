@@ -76,8 +76,6 @@ class Application(tk.Frame):
             thread_object.start_thread()
 
 
-
-
     def setlabel(self):
         print(self.sitemap)
         self.content=self.sitemap

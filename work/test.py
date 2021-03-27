@@ -4,6 +4,9 @@ import quicktranslate
 from bs4 import BeautifulSoup
 import requests
 from lxml import etree
+import collections
+import re
+from mysql_class import Mysql
 #实例化
 
 '''
@@ -62,7 +65,32 @@ def test1():
     except Exception as e:
         print(e)
         return None
-# res=quicktranslate.get_translate_google('星期日')
-# print(res)
-data=test1()
-print(data)
+
+
+def getText():
+    txt = open(r"C:\Users\CYG\Desktop\test.txt","r",encoding='utf-8').read()
+    # print(txt)
+    txt = txt.lower()
+    pattern = re.compile(r'\t|\n|\.|-|:|;|\)|\(|\?|\s[0-9]{1,2}\s|"')  # 定义正则表达式匹配模式（空格等）
+    txt = re.sub(pattern,' ',txt)
+    # print(string_data)
+    text=txt.split()
+    res=collections.Counter(text)
+    word_counts_top = res.most_common(500)
+    # print(word_counts_top)
+    mysql=Mysql(dbname='646')
+    for sort_name,num in word_counts_top:
+        if len(sort_name)>=3:
+            try:
+                print(sort_name,num)
+                insert_data=[]
+                pattern = re.compile("[^a-zA-Z0-9]")
+                sort_name = pattern.sub('',sort_name)
+                insert_data.append({'sort_name':sort_name})
+                insert_data.append({'num':num})
+                mysql.table('sort_name').insert(insert_data)
+            except BaseException as e:
+                print(e)
+
+data=getText()
+# print(data)
