@@ -158,3 +158,22 @@ def watermark(src_path, mask_path, alpha = 0.3):
         dst_channels[i][ul_points[0]: dr_points[0], ul_points[1]: dr_points[1]] += np.array(mask_channels[i] * (a * alpha / 255), dtype=np.uint8)
     dst_img = cv.merge(dst_channels)
     show_img(dst_img)
+
+def compare_img(file1='',file2=''):
+    file1 = r'C:\Users\CYG\Desktop\ball-mill2.jpg'
+    file2 = r'C:\Users\CYG\Desktop\ball-mill3.jpg'
+    im1 = cv.imread(file1)
+    im2 = cv.imread(file2)
+    if im1.shape == im2.shape:
+        print('shape一样')
+    else:
+        print('shape not equal')
+    difference = cv.subtract(im1,im2)
+    # print(difference)
+    result = not np.any(difference)
+    if result is False:
+        print('不一样')
+        cv.imwrite('reslult.jpg',difference)
+    else:
+        print('一样')
+compare_img()

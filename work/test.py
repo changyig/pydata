@@ -76,9 +76,9 @@ def getText():
     # print(string_data)
     text=txt.split()
     res=collections.Counter(text)
-    word_counts_top = res.most_common(500)
+    word_counts_top = res.most_common(1200)
     # print(word_counts_top)
-    mysql=Mysql(dbname='646')
+    mysql=Mysql(dbname='658')
     for sort_name,num in word_counts_top:
         if len(sort_name)>=3:
             try:
@@ -86,9 +86,10 @@ def getText():
                 insert_data=[]
                 pattern = re.compile("[^a-zA-Z0-9]")
                 sort_name = pattern.sub('',sort_name)
-                insert_data.append({'sort_name':sort_name})
-                insert_data.append({'num':num})
-                mysql.table('sort_name').insert(insert_data)
+                if sort_name!='con':
+                    insert_data.append({'sort_name':sort_name})
+                    insert_data.append({'num':num})
+                    mysql.table('sort_name').insert(insert_data)
             except BaseException as e:
                 print(e)
 

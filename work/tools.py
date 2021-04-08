@@ -159,8 +159,8 @@ class Tools:
     '''
     def img_dir_name(self):
         # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
-        dir_path = r'D:\files\产品图\800.530无水印\202013'
-        dir_path2 = r'D:\files\产品图\800.530无水印\202014'
+        dir_path = r'D:\files\产品图\800.530无水印\白底'
+        dir_path2 = r'D:\files\产品图\800.530无水印\baidi'
         for root,dirs,files in os.walk(dir_path):
             if dirs:
                 for dir in dirs:
@@ -174,13 +174,16 @@ class Tools:
             for file in files:
 
                 last_dir = root.split('\\')[-1]
-                last_dir_path = dir_path2 + '\\' + last_dir + '\\'
-                img_name = last_dir+'-'+str(i) + '.jpg'
+                # last_dir_path = dir_path2 + '\\' + last_dir + '\\'
+                last_dir_path = dir_path2 + '\\'
+                # img_name = last_dir+'-'+str(i) + '.jpg'
+                img_name = str(i) + '.jpg'
                 i = int(i) + 1
                 if os.path.exists(last_dir_path + img_name):
                     pass
                 else:
                     img = cv.imdecode(np.fromfile(root + '\\' + file,dtype=np.uint8),-1)
+                    img = cv.resize(img,(350,240),cv.INTER_AREA)
                     print(root + '\\' + file)
                     cv.imencode('.jpg',img)[1].tofile(last_dir_path + img_name)
                     # cv.imwrite(last_dir_path+file, img)
