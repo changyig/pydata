@@ -71,7 +71,20 @@ class HandleStr(object):
     def get_str(self,str=''):
         res=str.split('/')[-2].split('_')[-1].replace('-',' ')
         return res
-        # print(res)
+
+    #过滤掉中文和一些指定的特殊字符
+    def filter_ch(self,str=''):
+        cop = re.compile("[\u4e00-\u9fa5.*^()@/,]")  # 匹配不是中文、大小写、数字的其他字符
+        text = cop.sub('',str)
+
+        return text
+
+    #过滤掉中文和一些指定的特殊字符
+    def filter_ch2(self,str=''):
+        cop = re.compile("[\s()]")  # 匹配不是中文、大小写、数字的其他字符
+        text = cop.sub('',str)
+        print(text)
+        return text
     def str_page(self):
         str='https://www.google.com/search?q=site:ag-susa.cz&ei=pw5TYO3VMYOC-Qa0_52QCw&start=10&sa=N&ved=2ahUKEwitxYDTtbnvAhUDQd4KHbR_B7IQ8tMDegQIARA6&cshid=1616056076188366'
         # res=str.split('&')
@@ -90,5 +103,5 @@ class HandleStr(object):
 if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
-    str='ssf@@@DSFAVA  中昂过电话费————98e95r707*(*^&%*.,/<>?1245'
-    Strclass.retain_digital_letter(str)
+    str=r'E:\product-photo\images2\briquette-machine\briquette-machine\briquette_machine (34).jpg'
+    Strclass.filter_ch2(str)
