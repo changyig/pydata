@@ -78,7 +78,7 @@ def getText():
     res=collections.Counter(text)
     word_counts_top = res.most_common(1200)
     # print(word_counts_top)
-    mysql=Mysql(dbname='661')
+    mysql=Mysql(dbname='669')
     for sort_name,num in word_counts_top:
         if len(sort_name)>=3:
             try:

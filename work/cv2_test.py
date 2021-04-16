@@ -108,7 +108,7 @@ def img_dir_all():
             else:
                 img=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
                 img_save=img_flip(img)
-                img_save=resize_img(img_save)
+                # img_save=resize_img(img_save)
                 if last_dir.rstrip('/')=='hot-products':
                     file=last_dir+file
                 if last_dir.rstrip('/')=='briquette-machine':
