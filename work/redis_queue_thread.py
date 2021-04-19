@@ -16,8 +16,12 @@ parse_thread_list = []
 
 
 class CrawlThread(threading.Thread):
-    def __init__(self,name,redisqueue,queue_all,start_time):
+    def __init__(self,name,redisqueue,queue_all,start_time,sitename='./scrapy_data/virtualcafe.pl2.txt'):
         super().__init__()
+        if sitename=='':
+            self.url_site='./scrapy_data/virtualcafe.pl2.txt'
+        else:
+            self.url_site ='./scrapy_data/'+str(sitename)+'.txt'
         self.name = name
         self.redis_object = redisqueue
         self.queue_all = queue_all
@@ -54,7 +58,8 @@ class CrawlThread(threading.Thread):
                                                                          format(progress * 100,'.2f'),
                                                                          format(left_time,'.2f')))
                     print('当前采集器:{},当前title:{},当前url:{}'.format(self.name,title,url))
-                    with open('./scrapy_data/virtualcafe.pl.txt','a',encoding='utf8') as f:
+                    # with open('./scrapy_data/virtualcafe.pl2.txt','a',encoding='utf8') as f:
+                    with open(self.url_site,'a',encoding='utf8') as f:
                         f.write(title + '\n')
                 else:
                     pre_url = url
@@ -83,12 +88,12 @@ class CrawlThread(threading.Thread):
 
 # 用该类操作多线程类
 class Threadop:
-    def start_thread(self):
+    def start_thread(self,sitename=''):
         # 创建页码队列
         redisqueue = RedisQueue('keyword_url')
         qsize = redisqueue.qsize()
         for i in crawl_thread_list:
-            download_thread = CrawlThread(i,redisqueue,qsize,time.time())
+            download_thread = CrawlThread(i,redisqueue,qsize,time.time(),sitename)
             download_thread.start()
         print(qsize)
         time.sleep(20)
@@ -99,7 +104,7 @@ def main():
     redisqueue = RedisQueue('keyword_url')
     qsize = redisqueue.qsize()
     for i in crawl_thread_list:
-        download_thread = CrawlThread(i,redisqueue,qsize,time.time())
+        download_thread = CrawlThread(i,redisqueue,qsize,time.time(),sitename='')
         download_thread.start()
     print(qsize)
     time.sleep(20)

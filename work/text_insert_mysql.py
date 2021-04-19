@@ -21,7 +21,7 @@ class Mysql:
         self.cursor = self.connect.cursor()
     def read_txt_mysql(self):#（0 未知 1是地区词 2 不是地区词）
         origin='virtualcafe.pl'
-        filename= r"./scrapy_data/virtualcafe.pl.txt"
+        filename= r"scrapy_data/virtualcafe.pl2.txt"
         country=0
         remark='排名比较好的网站'
         with open(filename, 'r',encoding='utf-8') as infile:

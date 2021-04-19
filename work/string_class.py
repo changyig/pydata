@@ -2,6 +2,7 @@ import requests
 import json
 import re
 import time
+import difflib
 '''
     字符串类的操作
 '''
@@ -42,7 +43,7 @@ class HandleStr(object):
         else:
             result_list.append(string)
             return result_list
-    #通过正则对字符串进行过滤替换
+    #通过正则对特殊符号和中文字符串进行过滤替换
     def filter_str(self,text=''):
         cop = re.compile("[^\u4e00-\u9fa5^a-z^A-Z^0-9^（^）^(^)^:^,^.^。^，^-^%^!^?^\n]")  # 匹配不是中文、大小写、数字的其他字符
         text = cop.sub('',text)
@@ -100,8 +101,24 @@ class HandleStr(object):
         cop = re.compile("[^0-9]")
         text = cop.sub('',text)
         print(text)
+    def stain_one_space(self,str=''):
+        res = ' '.join(str.split())
+        return res
+    '''
+    说明:比较两个字符串的相似性
+    '''
+    def compare_string(self,a='',b=''):
+        a = self.stain_one_space(a).lower()
+        b = self.stain_one_space(b).lower()
+        res = difflib.SequenceMatcher(None,a,b).ratio()
+        return float(res)
+    def test_site(self):
+        str1='https://keatsteamympuls.nl/sitemap.xml'
+        pattern = re.compile(r'http[s]?://(.*)/(.*\.xml)',re.I)
+        res2=pattern.findall(str1)
+        print(res2[0][0])
 if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
     str=r'E:\product-photo\images2\briquette-machine\briquette-machine\briquette_machine (34).jpg'
-    Strclass.filter_ch2(str)
+    Strclass.test_site()

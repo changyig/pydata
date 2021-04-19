@@ -2,6 +2,7 @@ import tkinter as tk
 from redis_scrapy import RedisQueue
 from scrapy_class import Scrapy
 from redis_queue_thread import Threadop
+import re
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -60,9 +61,18 @@ class Application(tk.Frame):
         redis_object.delete('keyword_url')
         self.read_redis()
     # 开始运行程序 过程  sitemap的解析--》存入txt--》读取txt存redis--》运行爬虫程序
+    def url_para(self,sitemap=''):
+
+        pattern = re.compile(r'http[s]?://(.*)/(.*\.xml)',re.I)
+        res2 = pattern.findall(sitemap)
+        if res2:
+            return str(res2[0][0])
+        else:
+            return ''
     def run_scapy(self):
         redis_object = RedisQueue('keyword_url')
         sitemap=self.sitemap.get()
+        sitename=self.url_para(sitemap)
         self.show_text(sitemap)
         scrapy = Scrapy()
         print(scrapy)
@@ -73,7 +83,7 @@ class Application(tk.Frame):
             redis_object.read_text_redis()
             self.read_redis()
             thread_object=Threadop()
-            thread_object.start_thread()
+            thread_object.start_thread(sitename)
 
 
     def setlabel(self):
