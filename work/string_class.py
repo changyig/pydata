@@ -117,8 +117,17 @@ class HandleStr(object):
         pattern = re.compile(r'http[s]?://(.*)/(.*\.xml)',re.I)
         res2=pattern.findall(str1)
         print(res2[0][0])
+    def str_len(self,str='',num=0):
+        res=str.split()
+        if len(res)>=num:
+            return True
+        else:
+            return False
+
 if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
     str=r'E:\product-photo\images2\briquette-machine\briquette-machine\briquette_machine (34).jpg'
-    Strclass.test_site()
+    str=r'brick and tiles crushers in uk'
+    # Strclass.test_site()
+    Strclass.str_len(str)
