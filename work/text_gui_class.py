@@ -5,11 +5,7 @@ import sys
 import re
 from text_class import TextObject
 from tkinter import filedialog
-# 读取redis数量
-def read_redis():
-    redis_object = RedisQueue('keyword_url')
-    size = redis_object.qsize()
-    print(size)
+
 def fmtTime(timeStamp):
     timeArray = time.localtime(timeStamp)
     dateTime = time.strftime("%Y-%m-%d %H:%M:%S",timeArray)
@@ -33,7 +29,7 @@ class GUI():
         root.geometry("800x800")
         root.resizable = True
         # 第一排 选择按钮
-        self.txt_open = tk.Button(root,text='打开txt文件',command=self.start)
+        self.txt_open = tk.Button(root,text='打开txt文件',command=self.import_txt)
         self.txt_open.grid(row=1,column=2)
         self.txt_split = tk.Button(root,text='处理txt文件',command=self.handel_txt)
         self.txt_split.grid(row=1,column=4)
@@ -71,15 +67,14 @@ class GUI():
         list_data=[self.CheckVar1,self.CheckVar2,self.CheckVar3,self.CheckVar4]
         dicts_data = {0:'文本转换',1:'过滤特殊字符',2:'去除重复度高的',3:'分割'}
         for index,list in enumerate(list_data):
-            # print(list)
             list_data[index]=list.get()
-        # print(list_data)
         message_info='选中的功能区为：'
         for index ,d in dicts_data.items():
-            # [ list_data[i]==1  for i ,d in dicts_data.items()]
             if list_data[index]==1:
                 message_info=message_info+','+d
         print(message_info)
+        return list_data
+
     # 开始运行程序 过程  sitemap的解析--》存入txt--》读取txt存redis--》运行爬虫程序
     def url_para(self,sitemap=''):
 
@@ -94,9 +89,7 @@ class GUI():
     def handel_txt(self):
         T = threading.Thread(target=self.__handel_txt,args=())
         T.start()
-
-
-    def __run_sitemap(self):
+    def __import_txt(self):
         # s2fname = filedialog.askopenfilename(title='打开S2文件',filetypes=[('S2out','*.out'),('All Files','*')])
         s2fname = filedialog.askopenfilename(title='打开S2文件',filetypes=[('txt','*.txt')])
         self.txt_path=s2fname
@@ -104,11 +97,31 @@ class GUI():
     '''
     说明：多线程开启站点地图抓取
     '''
+    def import_txt(self):
+        T = threading.Thread(target=self.__import_txt,args=())
+        T.start()
+    def __start(self):
+        print('开始处理文本')
+        list_data = self.check_button()
+        text_object=TextObject(self.txt_path)
+        txt_content=text_object.read_text()
+        txt_content=text_object.sort_text(txt_content)
+        for index,value in enumerate(list_data):
+            print(index,value)
+            if value==1:
+                if index==0 :
+                    print('dd')
+                elif index==1 :
+                    print('aa')
+                elif index==2:
+                    print('ss')
+                else:
+                    print('cc')
+        print(txt_content)
     def start(self):
-        T = threading.Thread(target=self.__run_sitemap,args=())
+        T = threading.Thread(target=self.__start,args=())
         T.start()
 
-        # flag = scrapy.run_sitemap(sitemap)
 
 if __name__ == "__main__":
 

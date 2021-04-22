@@ -125,6 +125,7 @@ class TextObject(object):
             if strObject.str_len(line,3):
                 print(line)
                 self.write_text(file_path,line,'a')
+
 if __name__=='__main__':
     file_path=r'C:\Users\CYG\Desktop\key.txt'
 
