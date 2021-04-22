@@ -29,6 +29,15 @@ class RedisQueue(object):
         # 默认返回当前对象列表的值
         item = self.__db.lrange("keyword" , start , end)
         return item
+    def delete(self,key):
+        # 默认返回当前对象列表的值
+        item = self.__db.delete(key)
+
+    def read_text_redis(self,filename=r"scrapy_data/sitemap_url.txt"):
+        with open(filename,'r',encoding='utf-8') as infiles:
+            lines = infiles.readlines()
+            for line in lines:
+                self.put(line.strip('\n'))
 '''
     redis集合对象操纵
 '''
@@ -66,8 +75,9 @@ def read_text_redis(redis_object,filename=''):
         for line in lines:
            redis_object.put(line.strip('\n'))
 if __name__=='__main__':
-    filename=r"./sitemap_url.txt"
+    filename= r"scrapy_data/sitemap_url.txt"
 #     # redis_object=RedisSet('keyword_set')
     redis_object=RedisQueue('keyword_url')
+    # print(redis_object.delete('keyword_url'))
     print(redis_object.qsize())
     # read_text_redis(redis_object,filename)

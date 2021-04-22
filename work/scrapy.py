@@ -45,31 +45,5 @@ def read_url():
             # print('暂停')
             # break
             # print(keyword)
-def read_url_v2():
-    filename='../data/url/keyword2.txt'
-    sitemap_url='../data/url/url2.txt'
-    log_txt='../data/url/log2.txt'
-    url = 'https://f2c-menuiserie.fr/sitemap.xml'
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, "html.parser")
-    # print(soup)
-    count = soup.find_all(name="loc")
-    num = 0
-    for i in count:
-        url_text=i.string
-        print('开始sitemap地图：'+i.string)
-        res = requests.get(url_text)
-        soup2 = BeautifulSoup(res.text, "html.parser")
-        keyword_url = soup2.find_all(name="loc")
-        for word in keyword_url:
-            keyword_url=word.string
-            write_txt(keyword_url,sitemap_url)
-            keyword_html = requests.get(keyword_url)
-            keyword = BeautifulSoup(keyword_html.text, "html.parser")
-            title = keyword.title.string
-            write_txt(title,filename)
-            print('当前编号'+str(num)+'当前url:'+keyword_url)
-            log_message='当前编号'+str(num)+'当前url:'+keyword_url+'当前h1标签:'+title
-            write_txt(log_message,log_txt)
-            num=num+1
+
 read_url()

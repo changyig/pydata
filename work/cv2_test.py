@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 import os
+import re
 import pytesseract
 def img_kernel(img):
 #     kernel=np.ones([5,5],np.float32)/25
@@ -27,12 +28,12 @@ def img_threshold(img):
     ret, thresh = cv.threshold(Grayimg, 150,255,cv.THRESH_TOZERO)
     show_img(Grayimg)
     return thresh
-img=cv.imread(r"C:\Users\CYG\Desktop\1.png")
-return_img=img_threshold(img)
-pytesseract.pytesseract.tesseract_cmd = r"D:\soft\tesseract-ocr\tesseract.exe"  # 设置pyteseract路径
-result = pytesseract.image_to_string(return_img)  # 图片转文字
-print(result)  # 打印识别的验证码
-show_img(return_img)
+# img=cv.imread(r"C:\Users\CYG\Desktop\1.png")
+# return_img=img_threshold(img)
+# pytesseract.pytesseract.tesseract_cmd = r"D:\soft\tesseract-ocr\tesseract.exe"  # 设置pyteseract路径
+# result = pytesseract.image_to_string(return_img)  # 图片转文字
+# print(result)  # 打印识别的验证码
+# show_img(return_img)
 def add_mask(img):
     text='naprawavolvolodz'
     length=len(text)
@@ -84,10 +85,13 @@ def img_flip(img):
     # cv.imwrite(r'C:\Users\CYG\Desktop\修改之后的\1.jpg',return_img)
     # 对角
     # xImg1 = cv.flip(img, -1, dst=None)
+def resize_img(img):
+    return_img=cv.resize(img,(300,225))
+    return return_img
 def img_dir_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
-    dir_path=r'E:\红星办公文件\通用的模版文件\photo\原图片\image450'
-    dir_path2=r'E:\红星办公文件\通用的模版文件\photo\原图片\替换\image450-3'
+    dir_path=r'E:\product-photo\images'
+    dir_path2=r'E:\product-photo\images2'
     for root, dirs, files in os.walk(dir_path):
         if dirs:
             for dir in dirs:
@@ -103,17 +107,23 @@ def img_dir_all():
                 pass
             else:
                 img=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
-                print(root+'\\'+file)
-                # img_save=img_flip(img)
-                img_save=contrast_demo(img)
+                img_save=img_flip(img)
+                # img_save=resize_img(img_save)
+                if last_dir.rstrip('/')=='hot-products':
+                    file=last_dir+file
+                if last_dir.rstrip('/')=='briquette-machine':
+                    cop = re.compile("[\s()]")  # 匹配不是中文、大小写、数字的其他字符
+                    file = cop.sub('',file)
+                    file='-'.join(file.split('_'))
+                # img_save=contrast_demo(img)
                 cv.imencode('.jpg', img_save)[1].tofile(last_dir_path+file)
                 # cv.imwrite(last_dir_path+file, img)
-                print(last_dir_path+file)
-# img_dir_all()
+                print(last_dir_path + file)
+img_dir_all()
 def img_file_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
-    dir_path=r'E:\红星办公文件\通用的模版文件\photo\原图片\ProImages'
-    dir_path2=r'E:\红星办公文件\通用的模版文件\photo\原图片\替换\ProImages-3'
+    dir_path=r'E:\product-photo\images'
+    dir_path2=r'E:\product-photo\images2'
     for root, dirs, files in os.walk(dir_path):
         if dirs:
             for dir in dirs:
@@ -131,7 +141,8 @@ def img_file_all():
                 img=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
                 # img = cv.imread(root+'\\'+file)
                 print(root+'\\'+file)
-                img_save=contrast_demo(img)
+                img_save=img_flip(img)
+
                 cv.imencode('.jpg', img_save)[1].tofile(last_dir_path+file)
                 # cv.imwrite(last_dir_path+file, img)
                 print(last_dir_path+file)
@@ -158,3 +169,22 @@ def watermark(src_path, mask_path, alpha = 0.3):
         dst_channels[i][ul_points[0]: dr_points[0], ul_points[1]: dr_points[1]] += np.array(mask_channels[i] * (a * alpha / 255), dtype=np.uint8)
     dst_img = cv.merge(dst_channels)
     show_img(dst_img)
+
+def compare_img(file1='',file2=''):
+    file1 = r'C:\Users\CYG\Desktop\ball-mill2.jpg'
+    file2 = r'C:\Users\CYG\Desktop\ball-mill3.jpg'
+    im1 = cv.imread(file1)
+    im2 = cv.imread(file2)
+    if im1.shape == im2.shape:
+        print('shape一样')
+    else:
+        print('shape not equal')
+    difference = cv.subtract(im1,im2)
+    # print(difference)
+    result = not np.any(difference)
+    if result is False:
+        print('不一样')
+        cv.imwrite('reslult.jpg',difference)
+    else:
+        print('一样')
+# compare_img()
