@@ -37,6 +37,7 @@ class GUI():
 
         # 文本展示框
         # self.text_show =  tk.Text(root,yscrollcommand=self.scrollBar.set)
+        # self.text_show =  tk.Text(root,bg='black',fg='white')
         self.text_show =  tk.Text(root)
         self.text_show.grid(row=4, rowspan=5,columnspan=5)
         self.scrollBar = tk.Scrollbar(root,orient='vertical',command=self.text_show.yview)
@@ -113,10 +114,17 @@ class GUI():
                     print('dd')
                 elif index==1 :
                     print('aa')
-                elif index==2:
-                    print('ss')
-                else:
-                    print('cc')
+                elif index==2:#去除重复度高的
+                    print('sss')
+                    # txt_content=text_object.list_in_line(txt_content)
+                    # TextObject.list_write_text(txt_content,res[0],res[1],result_path,like_path)
+                else:#分割文本内容
+                    txt_content=text_object.split_list(txt_content,2,1)
+                    for index,content in enumerate(txt_content):
+                        write_path=r"C:\Users\Administrator\Desktop\python\key_split_{}.txt".format(index)
+                        # for line in content:
+                        text_object.write_text(write_path,content,'a')
+                    print(txt_content)
         print(txt_content)
     def start(self):
         T = threading.Thread(target=self.__start,args=())

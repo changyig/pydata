@@ -110,7 +110,6 @@ class TextObject(object):
         for index,line in enumerate(content):
             print(index,line,list_index)
             if index not in list_index:
-                print('xiru')
                 self.write_text(result_path,line,'a')
         for i in dict_list:
             temp='相似关键词:{}'.format(content[i])
