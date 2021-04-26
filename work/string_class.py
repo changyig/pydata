@@ -49,11 +49,18 @@ class HandleStr(object):
         text = cop.sub('',text)
         text = text.replace("\n",'<br/>').replace("-",'').replace('，',',').replace('。','.')
         return text
-    #通过正则对字符串只保留字母和数字
+    #通过正则对字符串只保留字母、数字、空格
     def retain_digital_letter(self,text=''):
-        pattern=re.compile("[^a-zA-Z0-9]")
-        text = pattern.sub('',text)
-        print(text)
+        pattern=re.compile("[^a-zA-Z0-9\s]")
+        text = ' '.join(pattern.sub('',text).split())
+        # print(text)
+        return text
+    #通过正则对字符串只保留字母、空格、空格不出现两个以上连续的以及开头不为空格
+    def retain_letter(self,text=''):
+        pattern=re.compile("[^a-zA-Z\s]")
+        text = ' '.join(pattern.sub('',text).split())
+        # print(text)
+        return text
     #通过正则判断字符串是否符合指定的格式
     def search_str(self,text=''):
         pattern=re.compile(r'https://www.hnhxpsj.com/([^pros]).*\.htm', re.I)
@@ -77,7 +84,6 @@ class HandleStr(object):
     def filter_ch(self,str=''):
         cop = re.compile("[\u4e00-\u9fa5.*^()@/,]")  # 匹配不是中文、大小写、数字的其他字符
         text = cop.sub('',str)
-
         return text
 
     #过滤掉中文和一些指定的特殊字符
@@ -128,6 +134,7 @@ if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
     str=r'E:\product-photo\images2\briquette-machine\briquette-machine\briquette_machine (34).jpg'
-    str=r'brick and tiles crushers in uk'
+    str=r' 1 2   %%%%*** brick asd58 54 and tiles crushers in uk'
     # Strclass.test_site()
-    Strclass.str_len(str)
+    text=Strclass.retain_digital_letter(str)
+    print(text)
