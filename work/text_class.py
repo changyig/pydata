@@ -120,17 +120,25 @@ class TextObject(object):
         file_path = r'C:\Users\CYG\Desktop\result.txt'
         strObject=HandleStr()
         for line in content:
-            line=line.strip().lower()+'\n'
+            line=line.strip()+'\n'
             if strObject.str_len(line,3):
                 print(line)
                 self.write_text(file_path,line,'a')
-
+    '''
+    说明：过滤掉txt文本中含有的特殊符号的 只保留  字母、数字、空格
+    '''
+    def filter_txt(self,content):
+        list_data=[]
+        for i in content:
+            list_data.append(self.string_object.retain_digital_letter(i))
+        return list_data
 if __name__=='__main__':
-    file_path=r'C:\Users\CYG\Desktop\result.txt'
-    # file_path=r'C:\Users\CYG\Desktop\key_result.txt'
+    file_path=r'E:\pycharmdata\pydata\work\fanjian.txt'
 
     TextObject=TextObject(file_path)
     content=TextObject.read_text()
+    content=TextObject.filter_txt(content)
+    print(content)
     # TextObject.str_list_text(content)
     # name=TextObject.get_text_name(file_path)
 
@@ -143,17 +151,19 @@ if __name__=='__main__':
     # random.shuffle(content)
     # random.shuffle(content)
     # random.shuffle(content)
-    # contents = TextObject.split_list(content,3,1)
+    # contents = TextObject.split_list(content,2,1)
+    # print(len(contents))
+    # # print(contents)
     # for index,content in enumerate(contents):
     #     write_path=r"C:\Users\CYG\Desktop\python\key_split_{}.txt".format(index)
     #     for line in content:
     #         TextObject.write_text(write_path,line,'a')
 
     # 根据txt文本中的相似性，将文本进行区分存储
-    result_path = r'C:\Users\CYG\Desktop\key_result.txt'
-    like_path = r'C:\Users\CYG\Desktop\key_like.txt'
-    content = TextObject.sort_text(content)
-    contents=TextObject.split_list(content)
-    for content in contents:
-        res=TextObject.list_in_line(content)
-        TextObject.list_write_text(content,res[0],res[1],result_path,like_path)
+    # result_path = r'C:\Users\CYG\Desktop\key_result.txt'
+    # like_path = r'C:\Users\CYG\Desktop\key_like.txt'
+    # content = TextObject.sort_text(content)
+    # contents=TextObject.split_list(content)
+    # for content in contents:
+    #     res=TextObject.list_in_line(content)
+    #     TextObject.list_write_text(content,res[0],res[1],result_path,like_path)

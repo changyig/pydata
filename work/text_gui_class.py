@@ -15,6 +15,7 @@ class re_Text():
     def __init__(self,widget):
         self.widget = widget
     def write(self,content):
+        # self.widget.delete('1.0', tk.END)
         self.widget.insert(tk.INSERT,content)
         self.widget.see(tk.END)
 
@@ -29,7 +30,10 @@ class GUI():
         root.geometry("800x800")
         root.resizable = True
         # 第一排 选择按钮
+        self.time_box = tk.Label(root,text='时间')
+        self.time_box.grid(row=1,column=1)
         self.txt_open = tk.Button(root,text='打开txt文件',command=self.import_txt)
+        self.time_run()
         self.txt_open.grid(row=1,column=2)
         self.txt_split = tk.Button(root,text='处理txt文件',command=self.handel_txt)
         self.txt_split.grid(row=1,column=4)
@@ -55,15 +59,23 @@ class GUI():
         self.ch2 = tk.Checkbutton(root,text='过滤特殊字符',      variable=self.CheckVar2,onvalue=1,offvalue=0,command=self.check_button)
         self.ch3 = tk.Checkbutton(root,text='去除重复度高的',    variable=self.CheckVar3,onvalue=1,offvalue=0,command=self.check_button)
         self.ch4 = tk.Checkbutton(root,text='分割',            variable=self.CheckVar4,onvalue=1,offvalue=0,command=self.check_button)
+        self.split_num=tk.StringVar()
+        self.split_num.set(2)
+        self.split_num_box = tk.Entry(root, textvariable=self.split_num)
         self.ch1.grid(row=10,column=1)
         self.ch2.grid(row=11,column=1)
         self.ch3.grid(row=12,column=1)
         self.ch4.grid(row=13,column=1)
+        self.split_num_box.grid(row=13,column=2)
 
         #功能按钮区
         self.start = tk.Button(root,text='开始执行',command=self.start)
         self.start.grid(row=14,column=6)
         root.mainloop()
+    def time_run(self):
+        timestr = time.strftime("%H:%M:%S") # 获取当前的时间并转化为字符串
+        self.time_box.configure(text=timestr)   # 重新设置标签文本
+        root.after(1000,self.time_run) # 每隔1s调用函数 gettime 自身获取时间
     def check_button(self):
         list_data=[self.CheckVar1,self.CheckVar2,self.CheckVar3,self.CheckVar4]
         dicts_data = {0:'文本转换',1:'过滤特殊字符',2:'去除重复度高的',3:'分割'}
@@ -112,8 +124,9 @@ class GUI():
             if value==1:
                 if index==0 :
                     print('dd')
-                elif index==1 :
-                    print('aa')
+                elif index==1 :#过滤掉特殊的字符
+                    txt_content=text_object.filter_txt(txt_content)
+                    print(txt_content)
                 elif index==2:#去除重复度高的
                     print('sss')
                     # txt_content=text_object.list_in_line(txt_content)
