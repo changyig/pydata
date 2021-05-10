@@ -5,6 +5,7 @@ import time
 import json
 from bs4 import BeautifulSoup
 from redis_scrapy import RedisQueue
+from scrapy_class import Scrapy
 import os
 import re
 # 采集线程列表
@@ -50,7 +51,7 @@ class CrawlThread(threading.Thread):
                     # print(content)
                     # print(keyword_html.text)
                     # print(keyword_html.content)
-                    self.make_dir(url,keyword_html.text,r'C:\Users\Administrator\Desktop\python')
+                    self.make_dir(url,keyword_html.text,r'C:\Users\CYG\Desktop\python')
                     progress = (self.queue_all - size) / self.queue_all
                     left_time = ((time.time() - self.start_time) / progress - (time.time() - self.start_time)) / 60
                     print('队列总个数：{}，剩余个数：{},当前进度：{}%,预计剩余时间：{}分钟'.format(self.queue_all,size,
@@ -126,18 +127,33 @@ def main():
     print('采集结束')
     pass
 def read_text_redis(redis_object,filename=''):
+    redis_object.delete()#先清空redis里面的队列 在想队列里面加入队列元素
     with open(filename, 'r', encoding='utf-8') as infiles:
         lines = infiles.readlines()
         for line in lines:
            redis_object.put(line.strip('\n'))
+def start():
+    filename = r"scrapy_data/sitemap_url.txt"
+    # sitemap = 'http://www.mytp518.com/sitemap.xml'
+    # scrapy = Scrapy()
+    # scrapy.run_sitemap(sitemap)
+    redis_object = RedisQueue('keyword_url')
+    print(redis_object.qsize())
+    read_text_redis(redis_object,filename)
+    print(redis_object.qsize())
+
+    main()
 
 if __name__ == "__main__":
-    filename= r"scrapy_data/sitemap_url.txt"
+
+
+    start()
+    # filename= r"scrapy_data/sitemap_url.txt"
     # redis_object=RedisSet('keyword_set')
-    redis_object=RedisQueue('keyword_url')
+    # redis_object=RedisQueue('keyword_url')
     # print(redis_object.delete('keyword_url'))
-    print(redis_object.qsize())
-    main()
+    # print(redis_object.qsize())
+    # main()
     # read_text_redis(redis_object,filename)
     # url='www.blog.csdn.net/tilyp/article/details/73657714.html'
     # url='www.blog.csdn.net/73657714.html'

@@ -68,7 +68,7 @@ def test1():
 
 
 def getText():
-    txt = open(r"C:\Users\CYG\Desktop\test.txt","r",encoding='utf-8').read()
+    txt = open(r"C:\Users\CYG\Desktop\keyword_text.txt","r",encoding='utf-8').read()
     # print(txt)
     txt = txt.lower()
     pattern = re.compile(r'\t|\n|\.|-|:|;|\)|\(|\?|\s[0-9]{1,2}\s|"')  # 定义正则表达式匹配模式（空格等）
@@ -78,7 +78,7 @@ def getText():
     res=collections.Counter(text)
     word_counts_top = res.most_common(1200)
     # print(word_counts_top)
-    mysql=Mysql(dbname='675')
+    mysql=Mysql(dbname='692')
     for sort_name,num in word_counts_top:
         if len(sort_name)>=3:
             try:
@@ -86,12 +86,13 @@ def getText():
                 insert_data=[]
                 pattern = re.compile("[^a-zA-Z0-9]")
                 sort_name = pattern.sub('',sort_name)
-                if sort_name!='con':
+                filter_list=['con','product','products','solutions','solution','blog','css','js','images','infoimages','fonts','static','ajax']
+                if sort_name not in filter_list and len(sort_name)>=3:#注意一些特殊语言的掺杂其中 所以加了个长度判定
                     insert_data.append({'sort_name':sort_name})
                     insert_data.append({'num':num})
                     mysql.table('sort_name').insert(insert_data)
             except BaseException as e:
                 print(e)
-
 data=getText()
+# mytest()
 # print(data)

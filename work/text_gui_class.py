@@ -51,7 +51,7 @@ class GUI():
         self.CheckVar2 = tk.IntVar()
         self.CheckVar3 = tk.IntVar()
         self.CheckVar4 = tk.IntVar()
-        self.ch1 = tk.Checkbutton(root,text='文本转换',            variable=self.CheckVar1,onvalue=1,offvalue=0,command=self.check_button)
+        self.ch1 = tk.Checkbutton(root,text='文本转换',         variable=self.CheckVar1,onvalue=1,offvalue=0,command=self.check_button)
         self.ch2 = tk.Checkbutton(root,text='过滤特殊字符',      variable=self.CheckVar2,onvalue=1,offvalue=0,command=self.check_button)
         self.ch3 = tk.Checkbutton(root,text='去除重复度高的',    variable=self.CheckVar3,onvalue=1,offvalue=0,command=self.check_button)
         self.ch4 = tk.Checkbutton(root,text='分割',            variable=self.CheckVar4,onvalue=1,offvalue=0,command=self.check_button)

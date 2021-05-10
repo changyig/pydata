@@ -120,13 +120,14 @@ class TextObject(object):
         file_path = r'C:\Users\CYG\Desktop\result.txt'
         strObject=HandleStr()
         for line in content:
-            line=line.strip()+'\n'
+            line=line.strip().lower()+'\n'
             if strObject.str_len(line,3):
                 print(line)
                 self.write_text(file_path,line,'a')
 
 if __name__=='__main__':
-    file_path=r'C:\Users\CYG\Desktop\key.txt'
+    file_path=r'C:\Users\CYG\Desktop\result.txt'
+    # file_path=r'C:\Users\CYG\Desktop\key_result.txt'
 
     TextObject=TextObject(file_path)
     content=TextObject.read_text()
@@ -135,26 +136,24 @@ if __name__=='__main__':
 
     # TextObject.write_text(r'C:\Users\CYG\Desktop\key3.txt',content)
 
-    result_path = r'C:\Users\CYG\Desktop\key_result.txt'
-    like_path = r'C:\Users\CYG\Desktop\key_like.txt'
-    content = TextObject.sort_text(content)
-    random.shuffle(content)
-    random.shuffle(content)
-    random.shuffle(content)
-    random.shuffle(content)
-    contents = TextObject.split_list(content,2,1)
-    print(len(contents))
-    # print(contents)
-    for index,content in enumerate(contents):
-        write_path=r"C:\Users\CYG\Desktop\python\key_split_{}.txt".format(index)
-        for line in content:
-            TextObject.write_text(write_path,line,'a')
-
-    # 根据txt文本中的相似性，将文本进行区分存储
     # result_path = r'C:\Users\CYG\Desktop\key_result.txt'
     # like_path = r'C:\Users\CYG\Desktop\key_like.txt'
     # content = TextObject.sort_text(content)
-    # contents=TextObject.split_list(content)
-    # for content in contents:
-    #     res=TextObject.list_in_line(content)
-    #     TextObject.list_write_text(content,res[0],res[1],result_path,like_path)
+    # random.shuffle(content)
+    # random.shuffle(content)
+    # random.shuffle(content)
+    # random.shuffle(content)
+    # contents = TextObject.split_list(content,3,1)
+    # for index,content in enumerate(contents):
+    #     write_path=r"C:\Users\CYG\Desktop\python\key_split_{}.txt".format(index)
+    #     for line in content:
+    #         TextObject.write_text(write_path,line,'a')
+
+    # 根据txt文本中的相似性，将文本进行区分存储
+    result_path = r'C:\Users\CYG\Desktop\key_result.txt'
+    like_path = r'C:\Users\CYG\Desktop\key_like.txt'
+    content = TextObject.sort_text(content)
+    contents=TextObject.split_list(content)
+    for content in contents:
+        res=TextObject.list_in_line(content)
+        TextObject.list_write_text(content,res[0],res[1],result_path,like_path)

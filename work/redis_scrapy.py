@@ -29,8 +29,13 @@ class RedisQueue(object):
         # 默认返回当前对象列表的值
         item = self.__db.lrange("keyword" , start , end)
         return item
-    def delete(self,key):
+    def delete(self,key=''):
         # 默认返回当前对象列表的值
+        if key=='':
+            key=self.key
+        else:
+            pass
+
         item = self.__db.delete(key)
 
     def read_text_redis(self,filename=r"scrapy_data/sitemap_url.txt"):

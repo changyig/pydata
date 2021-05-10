@@ -51,9 +51,9 @@ class HandleStr(object):
         return text
     #通过正则对字符串只保留字母和数字
     def retain_digital_letter(self,text=''):
-        pattern=re.compile("[^a-zA-Z0-9]")
+        pattern=re.compile("[^a-zA-Z0-9^\s]")
         text = pattern.sub('',text)
-        print(text)
+        return text
     #通过正则判断字符串是否符合指定的格式
     def search_str(self,text=''):
         pattern=re.compile(r'https://www.hnhxpsj.com/([^pros]).*\.htm', re.I)
@@ -118,6 +118,7 @@ class HandleStr(object):
         res2=pattern.findall(str1)
         print(res2[0][0])
     def str_len(self,str='',num=0):
+        str=self.retain_digital_letter(str)
         res=str.split()
         if len(res)>=num:
             return True
@@ -128,6 +129,6 @@ if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
     str=r'E:\product-photo\images2\briquette-machine\briquette-machine\briquette_machine (34).jpg'
-    str=r'brick and tiles crushers in uk'
+    str=r'brick and tiles crushers 88 in uk @$$ مشروع ماكينة نسيج قماش'
     # Strclass.test_site()
-    Strclass.str_len(str)
+    Strclass.retain_digital_letter(str)
