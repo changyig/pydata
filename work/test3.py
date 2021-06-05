@@ -9,11 +9,11 @@ import re
 from mysql_class import Mysql
 #实例化
 class TextData(object):
-    def __init__(self):
+    def __init__(self,read_path=r'C:\Users\CYG\Desktop\result2.txt'):
         self.product_path = r'E:\红星办公文件\数据分析资料\product.txt'
         self.material_path = r'E:\红星办公文件\数据分析资料\物料词.txt'
         self.country_path = r'E:\红星办公文件\数据分析资料\国家.txt'
-        self.read_path = r'C:\Users\CYG\Desktop\result2.txt'
+        self.read_path = read_path
         pass
 
     '''
@@ -131,15 +131,19 @@ class TextData(object):
                     else:
                         result_list['country'][res[2][0]] = 1
                 # print(res)
-        print(result_list)
-        print(dicts)
-        return [result_list,dicts]
+        # print(result_list)
+        # print(dicts)
+        return [line_num,result_list,dicts]
 if __name__=='__main__':
     file_path=r'C:\Users\CYG\Desktop\translate4.txt'
 
     TextObject=TextData()
     res=content=TextObject.read_txt()
-    print(res)
+    print('总数:{}'.format(res[0]))
+    print('产品总数:{},所占百分比:{:.2%}'.format(res[1]['product']['num'],res[1]['product']['num']/res[0]))
+    for i in res[1]['product'].items():
+
+        print("{}数量:{},所占百分比:{:.2%}".format(i[0],i[1],i[1]/res[0]))
 # result_list={'product':{'num':0},'material':{'num'}}
 # res=result_list.has_key('num')
 # if 'num' in result_list['product']:
