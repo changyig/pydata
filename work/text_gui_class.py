@@ -59,12 +59,16 @@ class GUI():
         self.ch2 = tk.Checkbutton(root,text='过滤特殊字符',      variable=self.CheckVar2,onvalue=1,offvalue=0,command=self.check_button)
         self.ch3 = tk.Checkbutton(root,text='去除重复度高的',    variable=self.CheckVar3,onvalue=1,offvalue=0,command=self.check_button)
         self.ch4 = tk.Checkbutton(root,text='分割',            variable=self.CheckVar4,onvalue=1,offvalue=0,command=self.check_button)
+        self.like_num = tk.StringVar()
+        self.like_num.set(0.82)
+        self.like_num_box = tk.Entry(root,textvariable=self.like_num)
         self.split_num=tk.StringVar()
         self.split_num.set(2)
         self.split_num_box = tk.Entry(root, textvariable=self.split_num)
         self.ch1.grid(row=10,column=1)
         self.ch2.grid(row=11,column=1)
         self.ch3.grid(row=12,column=1)
+        self.like_num_box.grid(row=12,column=2)
         self.ch4.grid(row=13,column=1)
         self.split_num_box.grid(row=13,column=2)
 
@@ -90,7 +94,6 @@ class GUI():
 
     # 开始运行程序 过程  sitemap的解析--》存入txt--》读取txt存redis--》运行爬虫程序
     def url_para(self,sitemap=''):
-
         pattern = re.compile(r'http[s]?://(.*)/(.*\.xml)',re.I)
         res2 = pattern.findall(sitemap)
         if res2:
@@ -124,20 +127,28 @@ class GUI():
             if value==1:
                 if index==0 :
                     print('dd')
+                    # txt_content=list(filter(lambda i:len((i.strip().lower() + '\n').split()) >= 3,txt_content))
+                    txt_content=[i.lower() for i in txt_content if len((i.strip().lower()+'\n').split())>=3]
                 elif index==1 :#过滤掉特殊的字符
                     txt_content=text_object.filter_txt(txt_content)
-                    print(txt_content)
+                    print('aa')
                 elif index==2:#去除重复度高的
                     print('sss')
+                    like_num = self.like_num.get()
+                    print('fe:{}'.format(like_num))
+                    txt_content = text_object.delete_like_list(txt_content,like_num)
                     # txt_content=text_object.list_in_line(txt_content)
                     # TextObject.list_write_text(txt_content,res[0],res[1],result_path,like_path)
                 else:#分割文本内容
-                    txt_content=text_object.split_list(txt_content,2,1)
+                    split_num=self.split_num.get()
+                    print('fe:{}'.format(split_num))
+                    txt_content=text_object.split_list(txt_content,split_num,1)
                     for index,content in enumerate(txt_content):
                         write_path=r"C:\Users\Administrator\Desktop\python\key_split_{}.txt".format(index)
-                        # for line in content:
-                        text_object.write_text(write_path,content,'a')
-                    print(txt_content)
+                        open(write_path,'w').close()
+                        for line in content:
+                            text_object.write_text(write_path,line,'a')
+                    # print(txt_content)
         print(txt_content)
     def start(self):
         T = threading.Thread(target=self.__start,args=())

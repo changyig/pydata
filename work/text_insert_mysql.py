@@ -20,8 +20,8 @@ class Mysql:
         # 通过cursor执行增删查改
         self.cursor = self.connect.cursor()
     def read_txt_mysql(self):#（0 未知 1是地区词 2 不是地区词）
-        origin='virtualcafe.pl'
-        filename= r"scrapy_data/virtualcafe.pl2.txt"
+        origin='www.glts-swidniczanka.pl'
+        filename= r"scrapy_data/www.glts-swidniczanka.pl.txt"
         country=0
         remark='排名比较好的网站'
         with open(filename, 'r',encoding='utf-8') as infile:
@@ -29,7 +29,7 @@ class Mysql:
                 try:
                     Strclass = HandleStr()
                     line=Strclass.filter_ch(line)
-                    sql = "INSERT INTO all_keyword(keyword,origin,createtime,country,remark) VALUES(%s,%s,%s,%s,%s)"
+                    sql = "INSERT INTO all_keyword_data(keyword,origin,createtime,country,remark) VALUES(%s,%s,%s,%s,%s)"
                     self.cursor.execute(sql, (self.filter_space(line), origin, int(time.time()),country,remark))
                     self.cursor.connection.commit()
                     self.mysqlNum = self.mysqlNum + 1

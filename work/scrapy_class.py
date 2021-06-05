@@ -106,7 +106,7 @@ class Scrapy:
             keyword_url = soup2.find_all(name="loc")
             for url in keyword_url:
                 url = url.string
-                print(url)
+                # print(url)
                 self.write_txt(filename,url)
 
     '''
@@ -200,6 +200,36 @@ class Scrapy:
         self.empty_txt()
         self.sitemap_url_txt()
         return True
+
+    '''
+      #说明: 根据站点地图网址，读取所有的链接并且提取其中的指定的内容到指定的文件中
+      #流程:sitemap.xml-->sitemap(1,2,3..).xml-->url（提取其中的内容）-->txt
+   '''
+
+    def sitemap_url_sort_txt(self):
+        url = self.url
+        filename = self.write_filename
+        r = requests.get(url)
+        # soup = BeautifulSoup(r.content.decode("utf-8-sig").encode("utf-8"), "xml")
+        soup = BeautifulSoup(r.text,"xml")
+        count = soup.find_all(name="loc")
+        num = 0
+        dict_sort={}
+        for i in count:
+            url_text = i.string
+            res = requests.get(url_text)
+            soup2 = BeautifulSoup(res.text,"xml")
+            # soup2 = BeautifulSoup(res.content.decode("utf-8-sig").encode("utf-8"), "xml")
+            keyword_url = soup2.find_all(name="loc")
+            for url in keyword_url:
+                sort = self.Strclass.get_url_sort(url.string)
+                if sort :
+                    if sort in dict_sort:
+                        dict_sort[sort]=dict_sort[sort]+1
+                    else:
+                        dict_sort[sort] =1
+        print(dict_sort)
+
 if __name__=='__main__':
     filename='https://www.numismaticaleuven.be/sitemap.xml'
     # Strclass=HandleStr()

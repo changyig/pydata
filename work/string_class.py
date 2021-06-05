@@ -130,11 +130,27 @@ class HandleStr(object):
         else:
             return False
 
+    '''
+        说明:通过分析url链接 返回分类的名称  #https://www.nie-marnuj-pieniedzy.pl/mobile-crushing-station/mxgf11b.html
+        return：mobile crushing station  or False
+    '''
+    def get_url_sort(self,url=''):
+        try:
+            pattern = re.compile(r'http[s]://',re.I)
+            url=pattern.sub('',url)
+            return url.split('/')[-2].replace('-',' ')
+        except Exception as e:
+            return False
+
 if __name__=='__main__':
     Strclass=HandleStr()
     # Strclass.search_str(str)
-    str=r'E:\product-photo\images2\briquette-machine\briquette-machine\briquette_machine (34).jpg'
-    str=r' 1 2   %%%%*** brick asd58 54 and tiles crushers in uk'
+    # str=r'E:\product-photo\images2\briquette-machine\briquette-machine\briquette_machine (34).jpg'
+    # str=r' 1 2   %%%%*** brick asd58 54 and tiles crushers in uk'
     # Strclass.test_site()
-    text=Strclass.retain_digital_letter(str)
-    print(text)
+    # text=Strclass.retain_digital_letter(str)
+    url = 'https://www.nie-marnuj-pieniedzy.pl/mobile-crushing-station/mxgf11b.html'
+    res=Strclass.get_url_sort(url)
+    print(res)
+
+

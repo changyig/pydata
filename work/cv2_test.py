@@ -5,17 +5,9 @@ import re
 import pytesseract
 def img_kernel(img):
 #     kernel=np.ones([5,5],np.float32)/25
-    kernel=np.array([[0,1,0],[0,1,0],[0,1,0]],np.float32)/3
+    kernel=np.array([[1,0,-1],[1,0,-1],[1,0,-1]],np.float32)
     dst=cv.filter2D(img,-1,kernel)
     return dst
-# img=cv.imread("./photo/3.jpg")
-# h,w = img.shape[0], img.shape[1]
-# print(h,w)
-# print(img)
-# print(np.array(img).shape)
-# print(img.shape)
-# cv.namedWindow("test",cv.WINDOW_AUTOSIZE)
-# src1=img_blur(img)
 
 def show_img(img,name='img'):
     cv.imshow(name, img)
@@ -28,12 +20,7 @@ def img_threshold(img):
     ret, thresh = cv.threshold(Grayimg, 150,255,cv.THRESH_TOZERO)
     show_img(Grayimg)
     return thresh
-# img=cv.imread(r"C:\Users\CYG\Desktop\1.png")
-# return_img=img_threshold(img)
-# pytesseract.pytesseract.tesseract_cmd = r"D:\soft\tesseract-ocr\tesseract.exe"  # 设置pyteseract路径
-# result = pytesseract.image_to_string(return_img)  # 图片转文字
-# print(result)  # 打印识别的验证码
-# show_img(return_img)
+
 def add_mask(img):
     text='naprawavolvolodz'
     length=len(text)
@@ -48,12 +35,12 @@ def blur(img):
     return_img=cv.blur(img,(2,2))
     return return_img
 def gaussianblur(img=''):
-    a=cv.imread('8.jpg')#
-    b=cv.GaussianBlur(a,(5,5),0)
-    cv.imshow('original',a)
+    cv.imshow('original',img)
+    b=cv.GaussianBlur(img,(3,3),1)
     cv.imshow('result',b)
     cv.waitKey(0)
     cv.destroyAllWindows()
+
 def medianblur(img=''):
     a=cv.imread('4.jpg')#
     b=cv.medianBlur(a,3)
@@ -88,10 +75,13 @@ def img_flip(img):
 def resize_img(img):
     return_img=cv.resize(img,(300,225))
     return return_img
+def bilateralfilter_img(img):
+    src1=cv.bilateralFilter(src=img,d=0,sigmaColor=80,sigmaSpace=20)
+    return src1
 def img_dir_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
-    dir_path=r'E:\product-photo\images'
-    dir_path2=r'E:\product-photo\images2'
+    dir_path=r'E:\product-photo\infoimages'
+    dir_path2=r'E:\product-photo\infoimages3'
     for root, dirs, files in os.walk(dir_path):
         if dirs:
             for dir in dirs:
@@ -106,15 +96,14 @@ def img_dir_all():
             if os.path.exists(last_dir_path+file):
                 pass
             else:
-                img=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
-                img_save=img_flip(img)
-                # img_save=resize_img(img_save)
-                if last_dir.rstrip('/')=='hot-products':
-                    file=last_dir+file
-                if last_dir.rstrip('/')=='briquette-machine':
-                    cop = re.compile("[\s()]")  # 匹配不是中文、大小写、数字的其他字符
-                    file = cop.sub('',file)
-                    file='-'.join(file.split('_'))
+                img_save=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
+                img_save=bilateralfilter_img(img_save)
+                # if last_dir.rstrip('/')=='hot-products':
+                #     file=last_dir+file
+                # if last_dir.rstrip('/')=='briquette-machine':
+                #     cop = re.compile("[\s()]")  # 匹配不是中文、大小写、数字的其他字符
+                #     file = cop.sub('',file)
+                #     file='-'.join(file.split('_'))
                 # img_save=contrast_demo(img)
                 cv.imencode('.jpg', img_save)[1].tofile(last_dir_path+file)
                 # cv.imwrite(last_dir_path+file, img)
@@ -187,4 +176,16 @@ def compare_img(file1='',file2=''):
         cv.imwrite('reslult.jpg',difference)
     else:
         print('一样')
-# compare_img()
+def bilateralfilter_img2(img):
+    # img = cv.cvtColor(img,cv.COLOR_BGR2RGB)
+    # print(img)
+    src1=cv.bilateralFilter(src=img,d=0,sigmaColor=80,sigmaSpace=20)
+    cv.imshow('test',src1)
+    # print(src1)
+    return src1
+
+
+# img=cv.imread(r"./photo/test1.jpg")
+# cv.imshow('image',img)
+# return_img=bilateralfilter_img2(img)
+# show_img(return_img)

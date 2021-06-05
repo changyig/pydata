@@ -76,16 +76,16 @@ def getText():
     # print(string_data)
     text=txt.split()
     res=collections.Counter(text)
-    word_counts_top = res.most_common(1200)
+    word_counts_top = res.most_common(1500)
     # print(word_counts_top)
-    mysql=Mysql(dbname='692')
+    mysql=Mysql(dbname='706')
     for sort_name,num in word_counts_top:
         if len(sort_name)>=3:
             try:
                 print(sort_name,num)
                 insert_data=[]
-                pattern = re.compile("[^a-zA-Z0-9]")
-                sort_name = pattern.sub('',sort_name)
+                # pattern = re.compile("[^a-zA-Z0-9]")
+                # sort_name = pattern.sub('',sort_name)
                 filter_list=['con','product','products','solutions','solution','blog','css','js','images','infoimages','fonts','static','ajax']
                 if sort_name not in filter_list and len(sort_name)>=3:#注意一些特殊语言的掺杂其中 所以加了个长度判定
                     insert_data.append({'sort_name':sort_name})
@@ -93,6 +93,29 @@ def getText():
                     mysql.table('sort_name').insert(insert_data)
             except BaseException as e:
                 print(e)
-data=getText()
+def test_sort():
+    dict={}
+    sort='limi'
+    sort2='limi2'
+    for i in range(10):
+        if sort:
+            if sort in dict:
+                dict[sort] = dict[sort] + 1
+            else:
+                dict[sort] = 1
+    for i in range(10):
+        if sort2:
+            if sort2 in dict:
+                dict[sort2] = dict[sort2] + 1
+            else:
+                dict[sort2] = 1
+    print(dict)
+def test_list(content=[]):
+    content = ['GADF making process from quarry','gold manganese and iron ore resources of africa','gold melting rajkot made machine']
+    # res=list(filter(lambda i: len((i.strip().lower()+'\n').split())>=3 , content))
+    res2=[i.lower()  for i in content   if len((i.strip().lower()+'\n').split())>=3]
+    print(res2)
+    # print(res2)
+test_list()
 # mytest()
 # print(data)

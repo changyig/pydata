@@ -41,7 +41,7 @@ class GUI():
         # 第二排
         self.button_test = tk.Button(root,text='测试',command=self.show)
         self.button_test.grid(row=2,column=7)
-        self.read_redis = tk.Button(root,text='读取redis',command=self.read_redis)
+        self.read_redis = tk.Button(root,text='读取redis',command=self.read_redis_command)
         self.read_redis.grid(row=2,column=0)
         self.clear_redis = tk.Button(root,text='清空redis',command=self.del_redis)
         self.clear_redis.grid(row=2,column=2)
@@ -75,30 +75,41 @@ class GUI():
     def show(self):
         T = threading.Thread(target=self.__show,args=())
         T.start()
-
-    # 清空redis数量
-    def del_redis(self):
+    def __del_redis(self):
         redis_object = RedisQueue('keyword_url')
         redis_object.delete('keyword_url')
-        read_redis()
-
+        self.read_redis_command()
+    # 清空redis数量
+    def del_redis(self):
+        T = threading.Thread(target=self.__del_redis,args=())
+        T.start()
     # 读取redis数量
-    def read_redis(self):
-        read_redis()
+    def __read_redis_command(self):
+        redis_object = RedisQueue('keyword_url')
+        size = redis_object.qsize()
+        print(size)
+    # 读取redis数量
+    def read_redis_command(self):
+        T = threading.Thread(target=self.__read_redis_command,args=())
+        T.start()
     def __run_sitemap(self):
         redis_object = RedisQueue('keyword_url')
         sitemap = self.sitemap.get()
-        sitename = self.url_para(sitemap)
-        print(sitename)
-        scrapy = Scrapy()
-        flag = scrapy.run_sitemap(sitemap)
-        if flag:
-            print('站点地图获取完成')
-            self.del_redis()
-            redis_object.read_text_redis()
-            self.read_redis()
-            thread_object = Threadop()
-            thread_object.start_thread(sitename)
+        sitemap_list=sitemap.replace('，',',').split(',')
+        print('站点个数:{},分别为:{}'.format(len(sitemap_list),sitemap_list))
+        for sitemap in sitemap_list:
+            sitename = self.url_para(sitemap)
+            print(sitename)
+            scrapy = Scrapy()
+            flag = scrapy.run_sitemap(sitemap)
+            if flag:
+                print('站点地图获取完成')
+                self.del_redis()
+                redis_object.read_text_redis()
+                self.__read_redis_command()
+                thread_object = Threadop()
+                thread_object.start_thread(sitename)
+                print('站点地图抓取结束:'.format(sitemap))
     '''
     说明：多线程开启站点地图抓取
     '''

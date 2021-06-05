@@ -1,3 +1,5 @@
+import os.path
+
 import requests
 import json
 import re
@@ -6,6 +8,7 @@ import math
 import difflib
 from string_class import HandleStr
 import random
+from baidu_api import BaiduApi
 '''
     字符串类的操作
 '''
@@ -32,13 +35,16 @@ class TextObject(object):
     def write_text(self,write_file='',content='',mode='w'):
         if write_file=='':
             write_file=self.file_path
+        if os.path.isfile(write_file):
+            pass
+        else:
+            open(write_file, mode='w',encoding='utf-8')
         write_handel = open(write_file, mode=mode,encoding='utf-8')
-
         if isinstance(content,str):
-            write_handel.write(content)
+            write_handel.write(content.strip()+'\n')
         elif isinstance(content,list):
             for line in content:
-                write_handel.write(line)
+                write_handel.write(line.strip()+'\n')
         else:
             print('未知处理方式')
 
@@ -68,7 +74,7 @@ class TextObject(object):
         说明：去除判断列表中相似重复度比较高的元素
         返回数据：[返回列表中相似度极高的下标，以及重复的键值]
     '''
-    def list_in_line(self,content=[]):
+    def list_in_line(self,content=[],threshold=0.85):
         list_data=[]
         list_index=[]#遍历行号
         list_like=[]#相似的行号
@@ -86,7 +92,7 @@ class TextObject(object):
                     else:
                         # print(index,line,index2,line2)
                         digital=self.string_object.compare_string(line,line2)#相似性长尾词进行判断 可以设置一个阀值进行去重
-                        if digital >0.85:
+                        if digital >threshold:
                             print('相似')
                             if index in dict_like:
                                 print(dict_like[index])
@@ -116,14 +122,31 @@ class TextObject(object):
             for ii in dict_list[i]:
                 temp=temp+'-->'+str(content[ii])
             self.write_text(like_path,temp,'a')
+
+    '''
+        说明：将list列表转换成指定的数据并返回list
+    '''
     def str_list_text(self,content):
         file_path = r'C:\Users\CYG\Desktop\result.txt'
         strObject=HandleStr()
         for line in content:
-            line=line.strip()+'\n'
+            line=line.strip().lower()+'\n'
             if strObject.str_len(line,3):
                 print(line)
                 self.write_text(file_path,line,'a')
+
+    '''
+        说明：将list列表转换成指定的数据并返回list
+    '''
+
+    def str_list_text2(self,content):
+        strObject = HandleStr()
+        return_list=[]
+        for line in content:
+            line = line.strip().lower() + '\n'
+            if strObject.str_len(line,3):
+                return_list.append(line)
+        return return_list
     '''
     说明：过滤掉txt文本中含有的特殊符号的 只保留  字母、数字、空格
     '''
@@ -132,13 +155,49 @@ class TextObject(object):
         for i in content:
             list_data.append(self.string_object.retain_digital_letter(i))
         return list_data
+
+    '''
+        说明：过滤掉txt文本中含有的特殊符号的 只保留  字母、数字、空格
+        '''
+    def baidu_translate(self,content):
+        write_path=r'C:\Users\CYG\Desktop\pydata\translate4.txt'
+        open(write_path,'w').close()
+        BaiduApiObj=BaiduApi()
+        num=200
+        n = math.ceil(len(content) / num)
+        k,m = divmod(len(content),n)
+        # print(k,m,n)
+        temp_list=[content[i * k + min(i,m):(i + 1) * k + min(i + 1,m)] for i in list(range(n))]
+        for onelist in temp_list:
+            translate_str=''.join(onelist)
+            # print(translate_str)
+            return_data=BaiduApiObj.start(translate_str)
+            print(return_data)
+            self.write_text(write_path,return_data,'a')
+            time.sleep(1.5)
+
+    '''
+    说明：给予指定的list表 过滤掉重复的内容 并返回不重复的内容
+    '''
+    def delete_like_list(self,content=[],threshold=0.85):
+        contents=self.split_list(content)
+        return_list=[]
+        for content in contents:
+            res=self.list_in_line(content,threshold)
+            for index,line in enumerate(content):
+                if index not in res[0]:
+                    return_list.append(content[index])
+        # print(return_list)
+        return return_list
 if __name__=='__main__':
-    file_path=r'E:\pycharmdata\pydata\work\fanjian.txt'
+    file_path=r'C:\Users\CYG\Desktop\translate4.txt'
 
     TextObject=TextObject(file_path)
     content=TextObject.read_text()
-    content=TextObject.filter_txt(content)
-    print(content)
+    # TextObject.delete_like_list(content)
+    # TextObject.baidu_translate(content)
+    # content=TextObject.filter_txt(content)
+    #
     # TextObject.str_list_text(content)
     # name=TextObject.get_text_name(file_path)
 
@@ -149,15 +208,14 @@ if __name__=='__main__':
     # content = TextObject.sort_text(content)
     # random.shuffle(content)
     # random.shuffle(content)
-    # random.shuffle(content)
-    # random.shuffle(content)
-    # contents = TextObject.split_list(content,2,1)
-    # print(len(contents))
-    # # print(contents)
-    # for index,content in enumerate(contents):
-    #     write_path=r"C:\Users\CYG\Desktop\python\key_split_{}.txt".format(index)
-    #     for line in content:
-    #         TextObject.write_text(write_path,line,'a')
+    random.shuffle(content)
+    random.shuffle(content)
+    contents = TextObject.split_list(content,3,1)
+    for index,content in enumerate(contents):
+        write_path=r"C:\Users\CYG\Desktop\pydata\key_split_{}.txt".format(index)
+        open(write_path,'w').close()
+        for line in content:
+            TextObject.write_text(write_path,line,'a')
 
     # 根据txt文本中的相似性，将文本进行区分存储
     # result_path = r'C:\Users\CYG\Desktop\key_result.txt'

@@ -21,9 +21,9 @@ class Data:
         self.start_time = time.time()
         self.currentLine = 0
         self.num = 0  # 插入数据库的数量
-        self.website = 'polskapaczkarnia.pl'  # 网站域名
+        self.website = 'www.glts-swidniczanka.pl'  # 网站域名
         self.cursor = self.connect.cursor()
-        self.bie_or_bar = 3 #1:bie->product 2:bie->materials 3:bar->words length
+        self.bie_or_bar = 1 #1:bie->product 2:bie->materials 3:bar->words length
     #获取指定表格的总得数量
     def get_num(self):
         # sql = "select type,count(*) as num,origin from all_keyword_data where origin like '%transports-speciaux.ch%' GROUP BY type"
@@ -68,10 +68,11 @@ class Data:
     # //1 => 'jaw crusher', 2 => 'impact crusher', 3 => 'cone crusher', 4 => 'stone crusher', 5 => 'mobile crusher',
     # 6 => 'crusher', 8 => 'hammer mill', 9 => 'ball mill', 10 => 'grinding mill', 13 => 'sand making machine', 14 => 'drying machine'
     def pie_show(self):
-        type = {0:'other',1:'jaw crusher',2:'impact crusher',3:'cone crusher',4:'stone crusher',5:'mobile crusher',6:'crusher',8:'hammer mill',9:'ball mill',10:'grinding mill',13:'sand making machine',14:'drying machine'}
+        type = {0:'other',1:'jaw crusher',2:'impact crusher',3:'cone crusher',4:'stone crusher',5:'mobile crusher',6:'crusher',8:'hammer mill',9:'ball mill',10:'grinding mill',13:'sand making machine',14:'drying machine',15:'roller crusher',16:'raymond mill',18:'rotary dryer',19:'magnetic separator',20:'vibrat screen',21:'Briquet Machine'}
         x = []
         y = []
         data = self.get_data()
+        print(data)
         for i in data:
             x.append(i[1])
             y.append(type[i[0]])
