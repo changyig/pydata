@@ -208,8 +208,8 @@ if __name__=='__main__':
     # content = TextObject.sort_text(content)
     # random.shuffle(content)
     # random.shuffle(content)
-    # random.shuffle(content)
-    # random.shuffle(content)
+    random.shuffle(content)
+    random.shuffle(content)
     contents = TextObject.split_list(content,3,1)
     for index,content in enumerate(contents):
         write_path=r"C:\Users\CYG\Desktop\pydata\key_split_{}.txt".format(index)

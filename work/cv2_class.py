@@ -1,5 +1,5 @@
 import cv2 as cv
-import numpy as np
+import np as np
 import os
 class Cv2class:
     def img_kernel(self,img):
@@ -88,7 +88,7 @@ class Cv2class:
         return_img=cv.resize(img,(450,320))
         return return_img
 if __name__=="__main__":
-    imgpath=r"C:\Users\CYG\Desktop\ball-2.jpg"
+    imgpath=r"D:\pydata\work\photo\1.jpg"
     # imgpath=r"4.jpg"
     img = cv.imread(imgpath)
     cv2class=Cv2class()

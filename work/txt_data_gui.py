@@ -88,13 +88,13 @@ class GUI():
         #功能按钮区
         self.start = tk.Button(root,text='数据解析',command=self.start)
         self.start.grid(row=14,column=6)
-        self.start = tk.Button(root,text='数量条形图',command=self.__bar_data)
+        self.start = tk.Button(root,text='总体条形图',command=self.__bar_data)
         self.start.grid(row=15,column=6)
         self.start = tk.Button(root,text='总体饼状图',command=self.__pie_data)
         self.start.grid(row=15,column=7)
-        self.start = tk.Button(root,text='地图柱状图',command=self.__country_bar)
+        self.start = tk.Button(root,text='国家柱状图',command=self.__country_bar)
         self.start.grid(row=16,column=6)
-        self.start = tk.Button(root,text='地图饼状图',command=self.__country_pie)
+        self.start = tk.Button(root,text='国家饼状图',command=self.__country_pie)
         self.start.grid(row=16,column=7)
         self.start = tk.Button(root,text='物料柱状图',command=self.__material_bar)
         self.start.grid(row=17,column=6)
@@ -102,6 +102,8 @@ class GUI():
         self.start.grid(row=17,column=7)
         self.start = tk.Button(root,text='产品分布图',command=self.__product_bar)
         self.start.grid(row=18,column=6)
+        self.start = tk.Button(root,text='词长分布图',command=self.__words_len)
+        self.start.grid(row=18,column=7)
         root.mainloop()
     def time_run(self):
         timestr = time.strftime("%H:%M:%S") # 获取当前的时间并转化为字符串
@@ -126,6 +128,13 @@ class GUI():
     # def handel_txt(self):
     #     T = threading.Thread(target=self.__handel_txt,args=())
     #     T.start()
+    def make_autopct(self,values):
+        def my_autopct(pct):
+            total = sum(values)
+            val = int(round(pct * total / 100.0))
+            # 同时显示数值和占比的饼图
+            return '{p:.2f}%({v:d})'.format(p=pct,v=val)
+        return my_autopct
     def __import_txt(self):
         # s2fname = filedialog.askopenfilename(title='打开S2文件',filetypes=[('S2out','*.out'),('All Files','*')])
         s2fname = filedialog.askopenfilename(title='打开S2文件',filetypes=[('txt','*.txt')])
@@ -147,7 +156,7 @@ class GUI():
         material_num=copy.deepcopy(self.text_data[1]['material']['num'])
         country_num=copy.deepcopy(self.text_data[1]['country']['num'])
         bar_data_y = [product_num,material_num,country_num]
-        plt.figure("总体柱状分布图")
+        plt.figure("总体柱状分布图",figsize=(8, 8), dpi=100)
         plt.title('总体柱状分布图,总数量:{}'.format(self.text_data[0]))
         for a,b in zip(bar_data_x,bar_data_y):
             plt.text(a,b + 0.05,'%.0f' % b,ha='center',va='bottom',fontsize=11)
@@ -162,13 +171,13 @@ class GUI():
         dict_y = []
         for xy in self.text_data[2].items():
             dict_x.append(xy[1]),dict_y.append(dict_name[xy[0]])
-        plt.figure("词的分类分析")
+        plt.figure("词的分类分析",figsize=(8, 8), dpi=100)
         plt.title('词的分类分析')
         plt.rcParams['font.sans-serif'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
         exp = [0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1]
-        plt.pie(dict_x,labels=dict_y,autopct='%1.1f%%',shadow=False,
-                startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
+        # plt.pie(dict_x,labels=dict_y,autopct='%1.1f%%',shadow=False,startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
+        plt.pie(dict_x,labels=dict_y,autopct=self.make_autopct(dict_x),shadow=False,startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
         plt.axis('equal')  # 保证饼状图是正圆，否则会有一点角度偏斜
         plt.legend()
         plt.show()
@@ -187,8 +196,32 @@ class GUI():
             if nm[1] >= 10:
                 bar_data_x.append(nm[0])
                 bar_data_y.append(nm[1])
-        plt.figure("产品柱状图分布")
+        plt.figure("产品柱状图分布",figsize=(8, 8), dpi=100)
         plt.title('产品柱状图分,布总数量:{}'.format(num))
+        plt.rcParams['font.sans-serif'] = ['SimHei']
+        plt.rcParams['axes.unicode_minus'] = False
+        p1 = plt.bar(bar_data_x,bar_data_y,bottom=0.217)
+        for a,b in zip(bar_data_x,bar_data_y):
+            plt.text(a,b + 0.05,'%.0f' % b,ha='center',va='bottom',fontsize=11)
+        plt.xticks(bar_data_x,rotation=-60)
+        plt.show()
+
+    '''
+               说明：通过bar将数据可视化
+           '''
+
+    def __words_len(self):
+        #产品条形图
+        bar_data_x = []
+        bar_data_y = []
+        data = copy.deepcopy(self.text_data[3])
+        print(data)
+        d_order = sorted(data.items(),key=lambda x:x[1],reverse=True)
+        for nm in d_order:
+            if nm[1] >= 10:
+                bar_data_x.append(nm[0])
+                bar_data_y.append(nm[1])
+        plt.figure("产品柱状图分布",figsize=(8,8),dpi=100)
         plt.rcParams['font.sans-serif'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
         p1 = plt.bar(bar_data_x,bar_data_y,bottom=0.217)
@@ -210,13 +243,13 @@ class GUI():
         for xy in data.items():
             if xy[1] >= 10:
                 data_x.append(xy[1]),data_y.append(xy[0])
-        plt.figure("国家饼状图分布")
+        plt.figure("国家饼状图分布",figsize=(8, 8), dpi=100)
         plt.title('国家饼状图分,布总数量:{}'.format(num))
         plt.rcParams['font.sans-serif'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
         exp = [0.1 for x in data_x]
-        plt.pie(data_x,labels=data_y,autopct='%1.1f%%',shadow=False,
-                startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
+        # plt.pie(data_x,labels=data_y,autopct='%1.1f%%',shadow=False,startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
+        plt.pie(data_x,labels=data_y,autopct=self.make_autopct(data_x),shadow=False,startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
         plt.axis('equal')  # 保证饼状图是正圆，否则会有一点角度偏斜
         plt.legend()
         plt.show()
@@ -235,7 +268,7 @@ class GUI():
             if nm[1] >= 10:
                 bar_data_x.append(nm[0])
                 bar_data_y.append(nm[1])
-        plt.figure("国家柱状图分布")
+        plt.figure("国家柱状图分布",figsize=(8, 8), dpi=100)
         plt.title('国家柱状图分布,总数量:{}'.format(num))
         plt.rcParams['font.sans-serif'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
@@ -258,13 +291,13 @@ class GUI():
         for xy in data.items():
             if xy[1] >= 10:
                 data_x.append(xy[1]),data_y.append(xy[0])
-        plt.figure("物料饼状图分布")
+        plt.figure("物料饼状图分布",figsize=(8, 8), dpi=100)
         plt.title('物料饼状图分,布总数量:{}'.format(num))
         plt.rcParams['font.sans-serif'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
         exp = [0.1 for x in data_x]
-        plt.pie(data_x,labels=data_y,autopct='%1.1f%%',shadow=False,
-                startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
+        # plt.pie(data_x,labels=data_y,autopct='%1.1f%%',shadow=False,startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
+        plt.pie(data_x,labels=data_y,autopct=self.make_autopct(data_x),shadow=False,startangle=90,explode=exp)  # startangle控制饼状图的旋转方向
         plt.axis('equal')  # 保证饼状图是正圆，否则会有一点角度偏斜
         plt.legend()
         plt.show()
@@ -283,7 +316,7 @@ class GUI():
             if nm[1] >= 10:
                 bar_data_x.append(nm[0])
                 bar_data_y.append(nm[1])
-        plt.figure("物料柱状图分布")
+        plt.figure("物料柱状图分布",figsize=(8, 8), dpi=100)
         plt.title('物料柱状图分布,总数量:{}'.format(num))
         plt.rcParams['font.sans-serif'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False

@@ -8,7 +8,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import pytesseract
 import hashlib
-import numpy as np
+import np as np
 class Tools:
     '''
     #说明：实际工作中遇见的一些问题，进行简便操作
