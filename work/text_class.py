@@ -93,9 +93,8 @@ class TextObject(object):
                         # print(index,line,index2,line2)
                         digital=self.string_object.compare_string(line,line2)#相似性长尾词进行判断 可以设置一个阀值进行去重
                         if digital >threshold:
-                            print('相似')
+                            print('相似编号:{0}-{1},相似内容:{2},对比:{3}'.format(index,index2,line,line2))
                             if index in dict_like:
-                                print(dict_like[index])
                                 dict_like[index].append(index2)
                             else:
                                 dict_like[index]=[index2]
@@ -114,7 +113,7 @@ class TextObject(object):
     '''
     def list_write_text(self,content,list_index,dict_list,result_path='',like_path=''):
         for index,line in enumerate(content):
-            print(index,line,list_index)
+            # print(index,line,list_index)
             if index not in list_index:
                 self.write_text(result_path,line,'a')
         for i in dict_list:
@@ -190,7 +189,7 @@ class TextObject(object):
         # print(return_list)
         return return_list
 if __name__=='__main__':
-    file_path=r'C:\Users\CYG\Desktop\translate4.txt'
+    file_path=r'C:\Users\CYG\Desktop\key_result2.txt'
 
     TextObject=TextObject(file_path)
     content=TextObject.read_text()
@@ -208,20 +207,20 @@ if __name__=='__main__':
     # content = TextObject.sort_text(content)
     # random.shuffle(content)
     # random.shuffle(content)
-    random.shuffle(content)
-    random.shuffle(content)
-    contents = TextObject.split_list(content,3,1)
-    for index,content in enumerate(contents):
-        write_path=r"C:\Users\CYG\Desktop\pydata\key_split_{}.txt".format(index)
-        open(write_path,'w').close()
-        for line in content:
-            TextObject.write_text(write_path,line,'a')
+    # random.shuffle(content)
+    # random.shuffle(content)
+    # contents = TextObject.split_list(content,3,1)
+    # for index,content in enumerate(contents):
+    #     write_path=r"C:\Users\CYG\Desktop\pydata\key_split_{}.txt".format(index)
+    #     open(write_path,'w').close()
+    #     for line in content:
+    #         TextObject.write_text(write_path,line,'a')
 
     # 根据txt文本中的相似性，将文本进行区分存储
-    # result_path = r'C:\Users\CYG\Desktop\key_result.txt'
-    # like_path = r'C:\Users\CYG\Desktop\key_like.txt'
-    # content = TextObject.sort_text(content)
-    # contents=TextObject.split_list(content)
-    # for content in contents:
-    #     res=TextObject.list_in_line(content)
-    #     TextObject.list_write_text(content,res[0],res[1],result_path,like_path)
+    result_path = r'C:\Users\CYG\Desktop\key_result2.txt'
+    like_path = r'C:\Users\CYG\Desktop\key_like.txt'
+    content = TextObject.sort_text(content)
+    contents=TextObject.split_list(content)
+    for content in contents:
+        res=TextObject.list_in_line(content)
+        TextObject.list_write_text(content,res[0],res[1],result_path,like_path)

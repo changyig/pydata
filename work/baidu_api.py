@@ -10,7 +10,7 @@ class BaiduApi(object):
         self.appid='20210511000822216'
         self.appkey='np72c9X6g4dFaflFPU3I'
         self.from_lang = 'en'
-        self.to_lang =  'ara'#ara zh
+        self.to_lang =  'ru'#ara zh  ru
     def start(self,content=''):
         try:
             return_list=[]

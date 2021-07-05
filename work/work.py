@@ -15,11 +15,11 @@ class handleTxt:
     '''
     def __init__(self):
         self.read_filename=''
-        self.write_filename='result26.txt'
+        self.write_filename='linshi.txt'
         self.readdir=r'D:\pydata\data\组装txt'
         self.writedir=r'D:\pydata\data\组装结果txt'
         self.make_num=60000
-        self.open_filename=r'C:\Users\CYG\Desktop\linshi.txt'
+        self.open_filename=r'C:\Users\CYG\Desktop\临时.txt'
         self.write_filename=r'C:\Users\CYG\Desktop\linshi2.txt'
     '''
     #判断文件是否存在 不存在就创建文件
@@ -135,8 +135,10 @@ class handleTxt:
         去除字符串中全是特殊字符
         '''
     def filter_nochar(self,text=''):
-        cop = re.compile("[^\u4e00-\u9fa5^a-z^A-Z^0-9^\n^\s^.]")  # 匹配不是中文、大小写、数字的其他字符
+        # cop = re.compile("[^\u4e00-\u9fa5^a-z^A-Z^0-9^\n^\s^.]")  # 匹配不是中文、大小写、数字的其他字符
+        cop = re.compile("[^a-z^A-Z^0-9^\n^\s^-]")  # 匹配不是中文、大小写、数字的其他字符
         text = cop.sub('',text)
+        print(text)
         return text
     '''
     将字符串中的数字替换掉  将txt里的除了a 以外的单个字符删除掉
@@ -229,4 +231,4 @@ if __name__=='__main__':
     # hd.read_txt_make()
     # hd.filter_digital_txt()
     # hd.filter_space_txt()
-    # hd.filter_txt()
+    hd.filter_txt()

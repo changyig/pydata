@@ -1,5 +1,5 @@
 import cv2 as cv
-import np as np
+import numpy as np
 import os
 import re
 import pytesseract
@@ -108,7 +108,7 @@ def img_dir_all():
                 cv.imencode('.jpg', img_save)[1].tofile(last_dir_path+file)
                 # cv.imwrite(last_dir_path+file, img)
                 print(last_dir_path + file)
-img_dir_all()
+# img_dir_all()
 def img_file_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
     dir_path=r'E:\product-photo\images'
@@ -183,8 +183,78 @@ def bilateralfilter_img2(img):
     cv.imshow('test',src1)
     # print(src1)
     return src1
+def nothing(x):
+    pass
+def hsv():
+    # icol = (36,202,59,71,255,255)  # Green
+    #icol = (18, 0, 196, 36, 255, 255)  # Yellow
+    #icol = (89, 0, 0, 125, 255, 255)  # Blue
+    icol = (0, 100, 80, 10, 255, 255)   # Red
+    cv.namedWindow('colorTest')
+    # Lower range colour sliders.
+    cv.createTrackbar('lowHue','colorTest',icol[0],255,nothing)
+    cv.createTrackbar('lowSat','colorTest',icol[1],255,nothing)
+    cv.createTrackbar('lowVal','colorTest',icol[2],255,nothing)
+    # Higher range colour sliders.
+    cv.createTrackbar('highHue','colorTest',icol[3],255,nothing)
+    cv.createTrackbar('highSat','colorTest',icol[4],255,nothing)
+    cv.createTrackbar('highVal','colorTest',icol[5],255,nothing)
 
+    # Raspberry pi file path example.
+    #frame = cv.imread('/home/pi/python3/opencv/color-test/colour-circles-test.jpg')
+    # Windows file path example.
+    frame = cv.imread('./photo/4.jpg')
 
+    while True:
+        # Get HSV values from the GUI sliders.
+        lowHue = cv.getTrackbarPos('lowHue','colorTest')
+        lowSat = cv.getTrackbarPos('lowSat','colorTest')
+        lowVal = cv.getTrackbarPos('lowVal','colorTest')
+        highHue = cv.getTrackbarPos('highHue','colorTest')
+        highSat = cv.getTrackbarPos('highSat','colorTest')
+        highVal = cv.getTrackbarPos('highVal','colorTest')
+
+        # Show the original image.
+        cv.imshow('frame',frame)
+
+        # Blur methods available, comment or uncomment to try different blur methods.
+        frameBGR = cv.GaussianBlur(frame,(7,7),0)
+        #frameBGR = cv.medianBlur(frameBGR, 7)
+        #frameBGR = cv.bilateralFilter(frameBGR, 15 ,75, 75)
+        """kernal = np.ones((15, 15), np.float32)/255
+        frameBGR = cv.filter2D(frameBGR, -1, kernal)"""
+
+        # Show blurred image.
+        cv.imshow('blurred',frameBGR)
+
+        # HSV (Hue, Saturation, Value).
+        # Convert the frame to HSV colour model.
+        hsv = cv.cvtColor(frameBGR,cv.COLOR_BGR2HSV)
+
+        # HSV values to define a colour range.
+        colorLow = np.array([lowHue,lowSat,lowVal])
+        colorHigh = np.array([highHue,highSat,highVal])
+        mask = cv.inRange(hsv,colorLow,colorHigh)
+        # Show the first mask
+        cv.imshow('mask-plain',mask)
+
+        kernal = cv.getStructuringElement(cv.MORPH_ELLIPSE,(7,7))
+        mask = cv.morphologyEx(mask,cv.MORPH_CLOSE,kernal)
+        mask = cv.morphologyEx(mask,cv.MORPH_OPEN,kernal)
+
+        # Show morphological transformation mask
+        cv.imshow('mask',mask)
+
+        # Put mask over top of the original image.
+        result = cv.bitwise_and(frame,frame,mask=mask)
+
+        # Show final output image
+        cv.imshow('colorTest',result)
+
+        k = cv.waitKey(5) & 0xFF
+        if k == 27:
+            break
+hsv()
 # img=cv.imread(r"./photo/test1.jpg")
 # cv.imshow('image',img)
 # return_img=bilateralfilter_img2(img)
