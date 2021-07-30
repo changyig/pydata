@@ -19,7 +19,7 @@ class handleTxt:
         self.readdir=r'D:\pydata\data\组装txt'
         self.writedir=r'D:\pydata\data\组装结果txt'
         self.make_num=60000
-        self.open_filename=r'C:\Users\CYG\Desktop\临时.txt'
+        self.open_filename=r'C:\Users\CYG\Desktop\test_url.txt'
         self.write_filename=r'C:\Users\CYG\Desktop\linshi2.txt'
     '''
     #判断文件是否存在 不存在就创建文件
@@ -130,6 +130,21 @@ class handleTxt:
                     str = str.strip('\n')
                 print(str)
                 file2.write(str)
+    '''
+    去除txt文档中 每行左边的空格 以及空行 全是特殊字符 只含有特殊符号占一行的直接过滤掉
+    '''
+    def filter_space_line(self):
+        cop = re.compile("[^a-z^A-Z^0-9^\n^\s^\-^.]")
+        filename = self.open_filename
+        file2 = open(self.write_filename, 'a', encoding='utf-8')
+        with open(filename, mode='r', encoding='utf-8') as ff:
+            for i in ff.readlines():
+                str_res = i.lstrip()
+                str_res = ''.join(cop.sub('',str_res).split())+'\n'
+                print(str_res)
+                if str_res == '\n' :
+                    str_res = str_res.strip('\n')
+                file2.write(str_res)
 
     '''
         去除字符串中全是特殊字符
@@ -175,7 +190,6 @@ class handleTxt:
     '''
         判断长尾关键词是否含有关键词
     '''
-
     def filter_keyword(self,words):
         arr=['crusher','crushing','crushers','dryer','drying','dryers','jaw','grinding','sand','sanding','machine','plant','mill','mills']
         word_list=words.split()
@@ -185,11 +199,7 @@ class handleTxt:
             else:
                 pass
         return False
-    '''
-    将txt里的内容分成等数量的多个txt文本
-    '''
-    def split_num_txt(self):
-        pass
+
 
     '''
         将txt里的内容删除多行
@@ -231,4 +241,4 @@ if __name__=='__main__':
     # hd.read_txt_make()
     # hd.filter_digital_txt()
     # hd.filter_space_txt()
-    hd.filter_txt()
+    hd.filter_space_line()

@@ -3,6 +3,46 @@ import numpy as np
 import os
 import re
 import pytesseract
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import easyocr as ocr
+
+def orc_detect():
+    reader = ocr.Reader(['ch_sim','en'])
+    result = reader.readtext(r'C:\Users\CYG\Desktop\2.png')
+
+    print(result)
+# orc_detect()
+def find_square():
+    img=cv.imread(r'C:\Users\CYG\Desktop\2.png')
+    cv.imshow('origin',img)
+    gray_img=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+    cv.imshow('gray',gray_img)
+    gauss_img=cv.GaussianBlur(gray_img,(3,3),5)
+    cv.imshow('gauss_img',gauss_img)
+    ret,binary = cv.threshold(gray_img,150,255,cv.THRESH_TOZERO)
+    cv.imshow('binary',binary)
+    contours, s = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    cv.drawContours(img,contours,-1,(0,0,255),3)  # 把轮廓画在原图上（0,0,255） 表示 RGB 三通道，红色
+
+    cv.imshow("image",img)  # 显示原图
+    cv.waitKey(0)
+find_square()
+def three_d():
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    X = np.arange(0,8,0.25)
+    Y = np.arange(0,8,0.25)
+    X,Y = np.meshgrid(X,Y)  # x-y 平面的网格
+    # Z = np.sqrt(X ** 2 + Y ** 2)
+    # Z =4-np.sqrt(X ** 2 + Y ** 2)
+    Z =np.multiply(X,Y)
+    print(Z)
+    # height value
+    # Z = np.sin(R)
+    ax.plot_surface(X,Y,Z,rstride=1,cstride=1,cmap=plt.get_cmap('rainbow'))
+    plt.show()
+# three_d()
 def img_kernel(img):
 #     kernel=np.ones([5,5],np.float32)/25
     kernel=np.array([[1,0,-1],[1,0,-1],[1,0,-1]],np.float32)
@@ -78,6 +118,18 @@ def resize_img(img):
 def bilateralfilter_img(img):
     src1=cv.bilateralFilter(src=img,d=0,sigmaColor=80,sigmaSpace=20)
     return src1
+def img_rotation(img):
+    cols,rows,chunnel = img.shape
+    M = cv.getRotationMatrix2D((cols / 2,rows / 2),5,1.1)#中心点 角度 缩放因子
+    dst = cv.warpAffine(img,M,(rows,cols))
+    return dst
+    # cv.imshow('1',img)
+    # cv.imshow('2',dst)
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
+
+# img=cv.imread('./photo/test1.jpg')
+# img_rotation(img)
 def img_dir_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
     dir_path=r'E:\product-photo\infoimages'
@@ -97,7 +149,8 @@ def img_dir_all():
                 pass
             else:
                 img_save=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
-                img_save=bilateralfilter_img(img_save)
+                # img_save=bilateralfilter_img(img_save)
+                img_save=img_rotation(img_save)
                 # if last_dir.rstrip('/')=='hot-products':
                 #     file=last_dir+file
                 # if last_dir.rstrip('/')=='briquette-machine':
@@ -108,7 +161,7 @@ def img_dir_all():
                 cv.imencode('.jpg', img_save)[1].tofile(last_dir_path+file)
                 # cv.imwrite(last_dir_path+file, img)
                 print(last_dir_path + file)
-# img_dir_all()
+
 def img_file_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
     dir_path=r'E:\product-photo\images'
@@ -254,7 +307,7 @@ def hsv():
         k = cv.waitKey(5) & 0xFF
         if k == 27:
             break
-hsv()
+# hsv()
 # img=cv.imread(r"./photo/test1.jpg")
 # cv.imshow('image',img)
 # return_img=bilateralfilter_img2(img)

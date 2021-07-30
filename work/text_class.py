@@ -47,6 +47,7 @@ class TextObject(object):
                 write_handel.write(line.strip()+'\n')
         else:
             print('未知处理方式')
+        write_handel.close()
 
 
     '''
@@ -173,7 +174,7 @@ class TextObject(object):
             return_data=BaiduApiObj.start(translate_str)
             print(return_data)
             self.write_text(write_path,return_data,'a')
-            time.sleep(1.5)
+            time.sleep(1)
 
     '''
     说明：给予指定的list表 过滤掉重复的内容 并返回不重复的内容
@@ -189,8 +190,7 @@ class TextObject(object):
         # print(return_list)
         return return_list
 if __name__=='__main__':
-    file_path=r'C:\Users\CYG\Desktop\key_result2.txt'
-
+    file_path=r'C:\Users\CYG\Desktop\result.txt'
     TextObject=TextObject(file_path)
     content=TextObject.read_text()
     # TextObject.delete_like_list(content)
@@ -208,19 +208,19 @@ if __name__=='__main__':
     # random.shuffle(content)
     # random.shuffle(content)
     # random.shuffle(content)
-    # random.shuffle(content)
-    # contents = TextObject.split_list(content,3,1)
-    # for index,content in enumerate(contents):
-    #     write_path=r"C:\Users\CYG\Desktop\pydata\key_split_{}.txt".format(index)
-    #     open(write_path,'w').close()
-    #     for line in content:
-    #         TextObject.write_text(write_path,line,'a')
+    random.shuffle(content)
+    contents = TextObject.split_list(content,3,1)
+    for index,content in enumerate(contents):
+        write_path=r"C:\Users\CYG\Desktop\pydata\key_split_{}.txt".format(index)
+        open(write_path,'w').close()
+        for line in content:
+            TextObject.write_text(write_path,line,'a')
 
     # 根据txt文本中的相似性，将文本进行区分存储
-    result_path = r'C:\Users\CYG\Desktop\key_result2.txt'
-    like_path = r'C:\Users\CYG\Desktop\key_like.txt'
-    content = TextObject.sort_text(content)
-    contents=TextObject.split_list(content)
-    for content in contents:
-        res=TextObject.list_in_line(content)
-        TextObject.list_write_text(content,res[0],res[1],result_path,like_path)
+    # result_path = r'C:\Users\CYG\Desktop\key_result2.txt'
+    # like_path = r'C:\Users\CYG\Desktop\key_like.txt'
+    # content = TextObject.sort_text(content)
+    # contents=TextObject.split_list(content)
+    # for content in contents:
+    #     res=TextObject.list_in_line(content)
+    #     TextObject.list_write_text(content,res[0],res[1],result_path,like_path)

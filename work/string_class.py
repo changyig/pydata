@@ -49,7 +49,7 @@ class HandleStr(object):
         text = cop.sub('',text)
         text = text.replace("\n",'<br/>').replace("-",'').replace('，',',').replace('。','.')
         return text
-    #通过正则对字符串只保留字母、数字、空格
+    #通过正则对字符串只保留字母、数字、空格 多个空格只保留一个
     def retain_digital_letter(self,text=''):
         pattern=re.compile("[^a-zA-Z0-9\s]")
         text = ' '.join(pattern.sub('',text).split())
@@ -65,12 +65,9 @@ class HandleStr(object):
     def search_str(self,text=''):
         pattern=re.compile(r'https://www.hnhxpsj.com/([^pros]).*\.htm', re.I)
         res=pattern.search(text)
-        print(res)
         if res:
             pattern = re.compile(r'\d+',re.I)
             digital = pattern.findall(text)
-            print(digital)
-            print(digital[0])
             return True
         else:
             return False
@@ -90,13 +87,9 @@ class HandleStr(object):
     def filter_ch2(self,str=''):
         cop = re.compile("[\s()]")  # 匹配不是中文、大小写、数字的其他字符
         text = cop.sub('',str)
-        print(text)
         return text
     def str_page(self):
         str='https://www.google.com/search?q=site:ag-susa.cz&ei=pw5TYO3VMYOC-Qa0_52QCw&start=10&sa=N&ved=2ahUKEwitxYDTtbnvAhUDQd4KHbR_B7IQ8tMDegQIARA6&cshid=1616056076188366'
-        # res=str.split('&')
-        # print(res[2])
-        # res[2]='start=290'
         cop = re.compile(r"&start=\d+")
         text = cop.sub('&start=290',str)
         print(text)
@@ -107,6 +100,7 @@ class HandleStr(object):
         cop = re.compile("[^0-9]")
         text = cop.sub('',text)
         print(text)
+    #多个空格只保留一个空格
     def stain_one_space(self,str=''):
         res = ' '.join(str.split())
         return res

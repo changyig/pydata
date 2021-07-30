@@ -79,7 +79,7 @@ def getText():
     res=collections.Counter(text)
     word_counts_top = res.most_common(1500)
     # print(word_counts_top)
-    mysql=Mysql(dbname='706')
+    mysql=Mysql(dbname='tp587')
     for sort_name,num in word_counts_top:
         if len(sort_name)>=3:
             try:
@@ -94,6 +94,42 @@ def getText():
                     mysql.table('sort_name').insert(insert_data)
             except BaseException as e:
                 print(e)
+
+getText()
+def getTextMysql():
+    txt = open(r"D:\pydata\work\scrapy_data\www.ogniskanadziei.pl.txt","r",encoding='utf-8').read()
+    # print(txt)
+    txt = txt.lower()
+    pattern = re.compile(r'\t|\n|\.|-|:|;|\)|\(|\?|\s[0-9]{1,2}\s|"')  # 定义正则表达式匹配模式（空格等）
+    txt = re.sub(pattern,' ',txt)
+    # print(string_data)
+    text=txt.split()
+    text_all=collections.Counter(text)
+    # print(text_all)
+    word_counts_top = text_all.most_common()
+    # print(word_counts_top)
+    mysql=Mysql(dbname='scrapy')
+    for sort_name,num in word_counts_top:
+        if len(sort_name)>=0:
+            try:
+                # print(sort_name,num)
+                insert_data=[]
+                # pattern = re.compile("[^a-zA-Z0-9]")
+                # sort_name = pattern.sub('',sort_name)
+
+                res=mysql.table('sort_name').where([{'sort_name':['=',sort_name]}]).find()
+
+                if res:
+                    insert_data.append({'num':int(res[2])+int(num)})
+                    mysql.table('sort_name').where([{'sort_name':['=',sort_name]}]).update(insert_data)
+                else:
+                    insert_data.append({'sort_name':sort_name})
+                    insert_data.append({'num':num})
+                    mysql.table('sort_name').insert(insert_data)
+            except BaseException as e:
+
+                print(e)
+# getTextMysql()
 def test_sort():
     dict={}
     sort='limi'
@@ -159,11 +195,6 @@ def square_xy(square1={},square2={}):
     else:
         square_size=abs(x[0]-x[1])*abs(y[0]-y[1])
     print(square_size)
-class elem(object):
-    def __init__(self, c, n):
-        self.nums = n
-        self.char = c
-
 
 def parse(string):
     stack = []
@@ -229,8 +260,8 @@ def parse(string):
     for em in stack:
         string += em.char + str(em.nums)
     print(string)
-string = 'K4[ON(MgSO3)2]2'
-parse(string)
+# string = 'K4[ON(MgSO3)2]2'
+# parse(string)
 
 # mytest()
 # print(data)

@@ -87,6 +87,63 @@ class Cv2class:
     def resize_img(self,img):
         return_img=cv.resize(img,(450,320))
         return return_img
+
+    def nothing(self,x):
+        pass
+    '''
+    说明：通过滑块 对图片颜色进行选择
+    '''
+    def hsv(self,path='./photo/4.jpg'):
+        # icol = (36,202,59,71,255,255)  # Green
+        #icol = (18, 0, 196, 36, 255, 255)  # Yellow
+        #icol = (89, 0, 0, 125, 255, 255)  # Blue
+        icol = (0,100,80,10,255,255)  # Red
+        cv.namedWindow('colorTest')
+        # Lower range colour sliders.
+        cv.createTrackbar('lowHue','colorTest',icol[0],255,self.nothing)
+        cv.createTrackbar('lowSat','colorTest',icol[1],255,self.nothing)
+        cv.createTrackbar('lowVal','colorTest',icol[2],255,self.nothing)
+        # Higher range colour sliders.
+        cv.createTrackbar('highHue','colorTest',icol[3],255,self.nothing)
+        cv.createTrackbar('highSat','colorTest',icol[4],255,self.nothing)
+        cv.createTrackbar('highVal','colorTest',icol[5],255,self.nothing)
+
+        frame = cv.imread(path)
+
+        while True:
+            lowHue = cv.getTrackbarPos('lowHue','colorTest')
+            lowSat = cv.getTrackbarPos('lowSat','colorTest')
+            lowVal = cv.getTrackbarPos('lowVal','colorTest')
+            highHue = cv.getTrackbarPos('highHue','colorTest')
+            highSat = cv.getTrackbarPos('highSat','colorTest')
+            highVal = cv.getTrackbarPos('highVal','colorTest')
+
+            cv.imshow('frame',frame)
+
+            frameBGR = cv.GaussianBlur(frame,(7,7),0)
+
+            cv.imshow('blurred',frameBGR)
+
+            hsv = cv.cvtColor(frameBGR,cv.COLOR_BGR2HSV)
+
+            # HSV values to define a colour range.
+            colorLow = np.array([lowHue,lowSat,lowVal])
+            colorHigh = np.array([highHue,highSat,highVal])
+            mask = cv.inRange(hsv,colorLow,colorHigh)
+            # Show the first mask
+            cv.imshow('mask-plain',mask)
+
+            kernal = cv.getStructuringElement(cv.MORPH_ELLIPSE,(7,7))
+            mask = cv.morphologyEx(mask,cv.MORPH_CLOSE,kernal)
+            mask = cv.morphologyEx(mask,cv.MORPH_OPEN,kernal)
+
+            cv.imshow('mask',mask)
+            result = cv.bitwise_and(frame,frame,mask=mask)
+            cv.imshow('colorTest',result)
+
+            k = cv.waitKey(5) & 0xFF
+            if k == 27:
+                break
 if __name__=="__main__":
     imgpath=r"D:\pydata\work\photo\1.jpg"
     # imgpath=r"4.jpg"
