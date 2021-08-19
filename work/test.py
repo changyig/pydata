@@ -79,7 +79,7 @@ def getText():
     res=collections.Counter(text)
     word_counts_top = res.most_common(1500)
     # print(word_counts_top)
-    mysql=Mysql(dbname='tp587')
+    mysql=Mysql(dbname='736')
     for sort_name,num in word_counts_top:
         if len(sort_name)>=3:
             try:
@@ -196,70 +196,7 @@ def square_xy(square1={},square2={}):
         square_size=abs(x[0]-x[1])*abs(y[0]-y[1])
     print(square_size)
 
-def parse(string):
-    stack = []
-    i = 0
-    while i < len(string):
-        c = string[i]
-        if c == "(" or c == "[":
-            stack.append(c)
-        elif c == ")" or c == "]":
-            tmp = []
-            i += 1
-            if i >= len(string):
-                c = '1'
-            else:
-                c = string[i]
-            if not c.isdigit():
-                i -= 1
-                c = 1
-            else:
-                c = int(c)
-            while 1 :
-                # print(stack)
-                em = stack.pop()
-                if em == "(" or em == "[":
-                    break
-                em.nums = em.nums * c
-                tmp.append(em)
-            if tmp:
-                stack.extend(tmp)
-        else:
-            s = "" + c
-            nums = 1
-            while 1:
-                i += 1
-                if i >= len(string):
-                    break
-                c = string[i]
-                if c.isupper():
-                    i-=1
-                    break
-                elif c.isdigit():
-                    nums = int(c)
-                    break
-                elif c in ["(", "[", ")", "]"]:
-                    i -= 1
-                    break
-                else:
-                    s += c
-            em = elem(s, nums)
-            stack.append(em)
-        i += 1
-    i, j = 0, 0
-    while i < len(stack):
-        j = i+1
-        while j < len(stack):
-            if stack[i].char == stack[j].char:
-                stack[i].nums += stack[j].nums
-                stack.pop(j)
-            j += 1
-        i+=1
-    stack.sort(key=lambda em : em.char[0])
-    string = ''
-    for em in stack:
-        string += em.char + str(em.nums)
-    print(string)
+
 # string = 'K4[ON(MgSO3)2]2'
 # parse(string)
 

@@ -117,6 +117,15 @@ class HandleStr(object):
         pattern = re.compile(r'http[s]?://(.*)/(.*\.xml)',re.I)
         res2=pattern.findall(str1)
         print(res2[0][0])
+    def www_detect(self):
+        str1='www.baidu.chf.com'
+        pattern=re.compile(r"^www.",re.I)
+        flag=pattern.search(str1)
+        print(flag)
+        if flag:
+            str1=pattern.sub('',str1)
+            print(str1)
+
     def str_len(self,str='',num=0):
         res=str.split()
         if len(res)>=num:
@@ -143,8 +152,7 @@ if __name__=='__main__':
     # str=r' 1 2   %%%%*** brick asd58 54 and tiles crushers in uk'
     # Strclass.test_site()
     # text=Strclass.retain_digital_letter(str)
-    url = 'https://www.nie-marnuj-pieniedzy.pl/mobile-crushing-station/mxgf11b.html'
-    res=Strclass.get_url_sort(url)
-    print(res)
+    res=Strclass.www_detect()
+
 
 

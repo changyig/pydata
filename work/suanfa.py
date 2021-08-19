@@ -42,7 +42,8 @@ def rnnList(arr=[],delarr=[],layer=1,n=0,combine_arr=[]):
 def rnnNum(arr=[],cur=0,num=1,combine=[]):
     num = num - 1
     if num<0:
-        # print(combine)
+        print(combine)
+        # yield combine
         return combine
     for index,i in enumerate(arr):
         if index >=cur:
@@ -53,5 +54,7 @@ def rnnNum(arr=[],cur=0,num=1,combine=[]):
     # print(return_list)
 
 # rnnList(arr,[],1,int(0))
-arr=[i for i in range(4)]
-rnnNum(arr,0,2,[])
+arr=[i for i in range(8)]
+rnnNum(arr,0,3,[])
+
+

@@ -27,7 +27,23 @@ def find_square():
 
     cv.imshow("image",img)  # 显示原图
     cv.waitKey(0)
-find_square()
+def test_cv():
+    img = cv.imread(r'C:\Users\CYG\Desktop\jaw-crusher1.jpg')
+    cv.imshow('origin',img)
+    gray_img = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+    cv.imshow('gray',gray_img)
+    cv.calcHist()
+    cv.waitKey(0)
+# test_cv()
+def hist_cv(img):
+    (b,g,r) = cv.split(img)
+    bH = cv.equalizeHist(b)
+    gH = cv.equalizeHist(g)
+    rH = cv.equalizeHist(r)
+    # 合并每一个通道
+    result = cv.merge((bH,gH,rH))
+    return result
+# hist_cv()
 def three_d():
     fig = plt.figure()
     ax = Axes3D(fig)
@@ -133,7 +149,7 @@ def img_rotation(img):
 def img_dir_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
     dir_path=r'E:\product-photo\infoimages'
-    dir_path2=r'E:\product-photo\infoimages3'
+    dir_path2=r'E:\product-photo\infoimageshist'
     for root, dirs, files in os.walk(dir_path):
         if dirs:
             for dir in dirs:
@@ -150,7 +166,9 @@ def img_dir_all():
             else:
                 img_save=cv.imdecode(np.fromfile(root+'\\'+file, dtype=np.uint8), -1)
                 # img_save=bilateralfilter_img(img_save)
-                img_save=img_rotation(img_save)
+                # img_save=img_rotation(img_save)
+                img_save=hist_cv(img_save)
+                # img_save=cv.cvtColor(img_save,cv.COLOR_BGR2GRAY)
                 # if last_dir.rstrip('/')=='hot-products':
                 #     file=last_dir+file
                 # if last_dir.rstrip('/')=='briquette-machine':
@@ -161,7 +179,7 @@ def img_dir_all():
                 cv.imencode('.jpg', img_save)[1].tofile(last_dir_path+file)
                 # cv.imwrite(last_dir_path+file, img)
                 print(last_dir_path + file)
-
+# img_dir_all()
 def img_file_all():
     # dir=r'E:\红星办公文件\通用的模版文件\photo\ProImages'
     dir_path=r'E:\product-photo\images'

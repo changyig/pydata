@@ -190,7 +190,7 @@ class TextObject(object):
         # print(return_list)
         return return_list
 if __name__=='__main__':
-    file_path=r'C:\Users\CYG\Desktop\result.txt'
+    file_path=r'C:\Users\CYG\Desktop\key_result2.txt'
     TextObject=TextObject(file_path)
     content=TextObject.read_text()
     # TextObject.delete_like_list(content)
